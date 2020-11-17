@@ -1,4 +1,4 @@
-const { createHireAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel } = require('../models/accountModel')
+const { createHireAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel, updatePatchAccountModel } = require('../models/accountModel')
 module.exports = {
   createHireAccount: async (req, res) => {
     try {
@@ -123,11 +123,12 @@ module.exports = {
     try {
       const { accountId } = req.params
       const { acName, acEmail, acNoHp, acPassword, acLevel } = req.body
-
-      if (acName.trim() && acEmail.trim() && acNoHp && acPassword.trim() && acLevel.trim()) {
+      console.log(acName.trim())
+      if (acName.trim() && acEmail.trim() && acNoHp.trim() && acPassword.trim() && acLevel.trim()) {
         const result = await getAccountByIdModel(accountId)
         if (result.length) {
-          const result = await updateAccountModel(accountId, req.body)
+          const result = await updateAccountModel(accountId, acName, acEmail, acNoHp, acPassword, acLevel)
+          console.log(result)
           if (result.affectedRows) {
             res.status(200).send({
               status: true,
@@ -154,8 +155,61 @@ module.exports = {
     } catch (error) {
       res.status(500).send({
         success: false,
+        message: 'Internal server errors!'
+      })
+      console.log(error)
+    }
+  },
+  updatePatchAccount: async (req, res) => {
+    try {
+      const { accountId } = req.params
+
+      const {
+        ac_name = '',
+        ac_email = '',
+        ac_no_hp = '',
+        ac_password = '',
+        ac_level = ''
+      } = req.body
+      if (ac_name.trim() || ac_email.trim() || ac_no_hp.trim() || ac_password.trim() || ac_level.trim()) {
+        const result = await getAccountByIdModel(accountId)
+        if (result.length) {
+          const dataColumn = Object.entries(req.body).map(item => {
+            console.log(item[0])
+            // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+            const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+            return queryDynamic
+          })
+          const result = await updatePatchAccountModel(accountId, dataColumn)
+          if (result.affectedRows) {
+            res.status(200).send({
+              succes: true,
+              message: 'Data Berhasil Di Update'
+            })
+          } else {
+            res.status(400).send({
+              succes: true,
+              message: 'Failed To update Data '
+            })
+          }
+        } else {
+          res.status(404).send({
+            succes: true,
+            message: `Proejct with id ${accountId} not Found `
+          })
+        }
+      } else {
+        res.status(400).send({
+          succes: true,
+          message: 'Some Field must be filled'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
         message: 'Internal server error!'
       })
+      console.log(error)
     }
   }
 }

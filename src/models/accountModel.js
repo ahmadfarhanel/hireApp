@@ -78,20 +78,21 @@ module.exports = {
           resolve(result)
         } else {
           reject(new Error(err))
+          console.log(err)
+        }
+      })
+    })
+  },
+  updatePatchAccountModel: (accountId, dataColumn) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE account SET ${dataColumn} WHERE ac_id = ${accountId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
         }
       })
     })
   }
-  // updatePatchAccountModel: (accountId, dataColumn) => {
-  //   return new Promise((resolve, reject) => {
-  //     const db = `UPDATE account SET ${dataColumn} WHERE ac_id = ${accountId}`
-  //     db.query(db, (err, result, _fields) => {
-  //       if (!err) {
-  //         resolve(result)
-  //       } else {
-  //         reject(new Error(err))
-  //       }
-  //     })
-  //   })
-  // }
+
 }

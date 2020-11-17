@@ -79,23 +79,54 @@ module.exports = {
 
       if (data.filter === 'name') {
         query = `
-          SELECT ac_name FROM account
+        SELECT ac.ac_name, 
+               en.en_job_tittle, 
+               en.en_job_type 
+        FROM engineer 
+               en JOIN account ac ON ac.ac_id = en.ac_id
+        GROUP by ac.ac_name
         `
       } else if (data.filter === 'skill') {
         query = `
-          SELECT sk_name_skill FROM skill
+        SELECT ac.ac_name, 
+               en.en_job_tittle, 
+               en.en_job_type,
+               sk.sk_name_skill 
+        FROM engineer en 
+               JOIN account ac ON ac.ac_id = en.ac_id
+               JOIN skill sk ON sk.en_id = en.en_id       
+        GROUP by sk.sk_name_skill 
         `
       } else if (data.filter === 'lokasi') {
         query = `
-          SELECT en_origin FROM engineer
+        SELECT ac.ac_name, 
+                en.en_job_tittle, 
+                en.en_job_type,
+                en.en_origin 
+        FROM engineer en 
+                JOIN account ac ON ac.ac_id = en.ac_id      
+        GROUP by en.en_origin 
         `
       } else if (data.filter === 'freelance') {
         query = `
-          SELECT * FROM engineer WHERE en_job_type = 'freelance'
+          SELECT ac.ac_name, 
+                  en.en_job_tittle, 
+                  en.en_job_type
+          FROM engineer en 
+                  JOIN account ac ON ac.ac_id = en.ac_id 
+          WHERE en.en_job_type = 'freelance'     
+          GROUP by en.en_job_type
+          
         `
-      } else if (data.filter === 'fulltime') {
+      } else {
         query = `
-        SELECT * FROM engineer WHERE en_job_type = 'fulltime'
+          SELECT ac.ac_name, 
+                  en.en_job_tittle, 
+                  en.en_job_type
+          FROM engineer en 
+                  JOIN account ac ON ac.ac_id = en.ac_id 
+          WHERE en.en_job_type = 'fulltime'         
+          GROUP by en.en_job_type
       `
       }
 

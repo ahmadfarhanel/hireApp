@@ -1,10 +1,10 @@
 const db = require('../helpers/db')
 
 module.exports = {
-  createHireModel: (hrPrice, hrMessage, hrStatus, hrDateConfirm) => {
+  createHireModel: (enId, pjId, hrPrice, hrMessage, hrStatus, hrDateConfirm) => {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO hire (hr_price, hr_message, hr_status, hr_date_confirm) VALUES 
-        ('${hrPrice}', '${hrMessage}', '${hrStatus}', '${hrDateConfirm}')`
+      const query = `INSERT INTO hire (en_id, pj_id, hr_price, hr_message, hr_status, hr_date_confirm) VALUES 
+        ('${enId}', '${pjId}', '${hrPrice}', '${hrMessage}', '${hrStatus}', '${hrDateConfirm}')`
       console.log(query)
       db.query(query, (error, results, _fields) => {
         if (!error) {
@@ -60,6 +60,19 @@ module.exports = {
         } else {
           reject(error)
           console.log(error)
+        }
+      })
+    })
+  },
+  updateStatusHireByIdModel: (hireId, hrStatus) => {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE hire SET hr_status = '${hrStatus}', hr_date_confirm = CURRENT_TIMESTAMP WHERE hr_id = ${hireId} `
+      db.query(query, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+          console.log(err)
         }
       })
     })
