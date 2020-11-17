@@ -7,12 +7,12 @@ module.exports = {
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
-          message: 'Succes Add Project'
+          message: 'Succes Add Portofolio'
         })
       } else {
         res.status(404).send({
           success: false,
-          message: 'Submit Project Failed'
+          message: 'Submit Portofolio Failed'
         })
       }
     } catch (error) {
@@ -31,13 +31,13 @@ module.exports = {
       if (result.length) {
         res.status(200).send({
           success: true,
-          message: `Project with id ${portofolioId}`,
+          message: `Portofolio with id ${portofolioId}`,
           data: result[0]
         })
       } else {
         res.status(404).send({
           success: false,
-          message: `Data project with id ${portofolioId} not found`
+          message: `Data Portofolio with id ${portofolioId} not found`
         })
       }
     } catch (error) {
@@ -59,7 +59,7 @@ module.exports = {
         if (result.affectedRows) {
           res.status(200).send({
             status: true,
-            message: `Project With ID ${portofolioId} has been update`
+            message: `Portofolio With ID ${portofolioId} has been update`
           })
         } else {
           res.status(400).send({
@@ -70,7 +70,7 @@ module.exports = {
       } else {
         res.status(400).send({
           success: false,
-          message: `Project with id ${portofolioId} not Found`
+          message: `Portofolio with id ${portofolioId} not Found`
         })
       }
     } catch (error) {
@@ -90,7 +90,7 @@ module.exports = {
         if (result.affectedRows) {
           res.status(200).send({
             status: true,
-            message: `Project With ID ${portofolioId} has been delete`
+            message: `Portofolio With ID ${portofolioId} has been delete`
           })
         } else {
           res.status(400).send({
@@ -101,7 +101,7 @@ module.exports = {
       } else {
         res.status(400).send({
           success: false,
-          message: `Project with id ${portofolioId} not Found`
+          message: `Portofolio with id ${portofolioId} not Found`
         })
       }
     } catch (error) {
