@@ -2,38 +2,42 @@ const db = require('../helpers/db')
 
 const { createHireEngineerModel } = require('../models/engineerModel')
 const { createHireCompanyModel } = require('../models/companyModel')
+
 module.exports = {
-  createHireAccountModel: (acName, acEmail, acNoHp, acPassword, acLevel, cnName, cnPosition) => {
+  registerAccountModel: (setData) => {
     return new Promise((resolve, reject) => {
+      const insertData = {
+        ac_name: setData.ac_name,
+        ac_no_hp: setData.ac_no_hp,
+        ac_email: setData.ac_email,
+        ac_password: setData.ac_password,
+        ac_level: setData.ac_level,
+        ac_created_at: new Date()
+      }
       const query = `
         INSERT INTO account
                 SET ?
       `
-      const dataAcc = {
-        ac_name: acName,
-        ac_email: acEmail,
-        ac_no_hp: acNoHp,
-        ac_password: acPassword,
-        ac_level: acLevel
-      }
-
-      db.query(query, dataAcc, async (err, res, _fields) => {
-        console.log(dataAcc)
+      db.query(query, insertData, async (err, res, _fields) => {
         if (!err) {
-          if (parseInt(acLevel) === 0) {
-            console.log(res)
-            await createHireEngineerModel(res.insertId)
+          if (parseInt(setData.ac_level) === 0) {
+            await createHireEngineerModel(insertData, res)
           } else {
             await createHireCompanyModel({
               ac_id: res.insertId,
-              cn_name: cnName,
-              cn_position: cnPosition
+              cn_name: setData.cn_name,
+              cn_position: setData.cn_position
             })
           }
-          resolve(res)
+          const newResult = {
+            id: res.insertId,
+            affectedRows: res.affectedRows,
+            ...insertData
+          }
+          delete newResult.ac_password
+          resolve(newResult)
         } else {
           reject(err)
-          console.log(err)
         }
       })
     })
@@ -90,6 +94,18 @@ module.exports = {
           resolve(result)
         } else {
           reject(new Error(err))
+        }
+      })
+    })
+  },
+  getDataAccountModel: (acEmail) => {
+    return new Promise((resolve, reject) => {
+      const querySelect = `SELECT ac_email FROM account WHERE ac_email = '${acEmail}'`
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
         }
       })
     })

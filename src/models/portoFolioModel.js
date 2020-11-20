@@ -31,14 +31,12 @@ module.exports = {
       })
     })
   },
-  updateDataPortofolioByIdModel: (portofolioId, data) => {
-    console.log(data)
+  updateDataPortofolioByIdModel: (portofolioId, enId, prApplication, prDesc, prLinkPub, prLinkRepo, prTpKerja, prType, data) => {
     return new Promise((resolve, reject) => {
       const query = `
-      UPDATE portofolio
-         SET ?
-       WHERE pr_id = ${portofolioId}
-    `
+      UPDATE portofolio SET en_id = '${enId}', pr_application = '${prApplication}', 
+      pr_desc = '${prDesc}', pr_link_pub = '${prLinkPub}', pr_link_repo = '${prLinkRepo}', 
+      pr_tp_kerja = '${prTpKerja}', pr_type = '${prType}', pr_gambar = '${data}' WHERE pr_id = '${portofolioId}'`
       db.query(query, data, (error, results, _fields) => {
         if (!error) {
           resolve(results)

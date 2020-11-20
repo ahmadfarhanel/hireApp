@@ -2,8 +2,17 @@ const { createProjectModel, getDataProjectByIdModel, updateDataProjectByIdModel,
 module.exports = {
   createProject: async (req, res) => {
     try {
-      const dataCreate = req.body
-      const result = await createProjectModel(dataCreate)
+      const { cnId, pjName, pjDesc, pjDeadline } = req.body
+      const data = {
+        cn_id: cnId,
+        pj_project_name: pjName,
+        pj_desc: pjDesc,
+        pj_deadline: pjDeadline,
+        pj_picture: req.file === undefined ? '' : req.file.filename
+      }
+      console.log(data)
+
+      const result = await createProjectModel(data)
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
@@ -50,34 +59,43 @@ module.exports = {
   updateDataProjectById: async (req, res) => {
     try {
       const { projectId } = req.params
-      const dataId = await getDataProjectByIdModel(projectId)
-      const dataUpdate = req.body
-      console.log(req.body)
-      if (dataId.length) {
-        const result = await updateDataProjectByIdModel(projectId, dataUpdate)
-        console.log(result)
-        if (result.affectedRows) {
-          res.status(200).send({
-            status: true,
-            message: `Project With ID ${projectId} has been update`
-          })
+      const { cnId, pjProjectName, pjDesc, pjDeadline } = req.body
+      const data = {
+        image: req.file === undefined ? '' : req.file.filename
+      }
+      if (cnId.trim() && pjProjectName.trim() && pjDesc.trim() && pjDeadline.trim()) {
+        const result = await getDataProjectByIdModel(projectId)
+        if (result.length) {
+          const result = await updateDataProjectByIdModel(projectId, cnId, pjProjectName, pjDesc, pjDeadline, data.image)
+          if (result.affectedRows) {
+            res.status(200).send({
+              status: true,
+              message: `Project With ID ${projectId} has been update`
+            })
+          } else {
+            res.status(400).send({
+              status: false,
+              message: 'Failed to Update Data '
+            })
+          }
         } else {
           res.status(400).send({
-            status: false,
-            message: 'Failed to Update Data '
+            success: false,
+            message: `Project with id ${projectId} not Found`
           })
         }
       } else {
-        res.status(400).send({
+        res.send({
           success: false,
-          message: `Project with id ${projectId} not Found`
+          message: 'All Field must be filled!'
         })
       }
     } catch (error) {
       res.status(500).send({
         success: false,
-        message: 'Internal server error!'
+        message: 'Internal server error !'
       })
+      console.log(error)
     }
   },
   deleteDataProjectById: async (req, res) => {

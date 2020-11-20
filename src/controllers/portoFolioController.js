@@ -2,8 +2,19 @@ const { createPortofolioModel, getDataPortofolioByIdModel, updateDataPortofolioB
 module.exports = {
   createPortofolio: async (req, res) => {
     try {
-      const dataCreate = req.body
-      const result = await createPortofolioModel(dataCreate)
+      const { enId, prApplication, prDesc, prLinkPub, prLinkRepo, prTpKerja, prType } = req.body
+      const data = {
+        en_id: enId,
+        pr_application: prApplication,
+        pr_desc: prDesc,
+        pr_link_pub: prLinkPub,
+        pr_link_repo: prLinkRepo,
+        pr_tp_kerja: prTpKerja,
+        pr_type: prType,
+        pr_gambar: req.file === undefined ? '' : req.file.filename
+      }
+      console.log(data)
+      const result = await createPortofolioModel(data)
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
@@ -50,34 +61,44 @@ module.exports = {
   updateDataportofolioById: async (req, res) => {
     try {
       const { portofolioId } = req.params
-      const dataId = await getDataPortofolioByIdModel(portofolioId)
-      const dataUpdate = req.body
-      console.log(req.body)
-      if (dataId.length) {
-        const result = await updateDataPortofolioByIdModel(portofolioId, dataUpdate)
-        console.log(result)
-        if (result.affectedRows) {
-          res.status(200).send({
-            status: true,
-            message: `Portofolio With ID ${portofolioId} has been update`
-          })
+      const { enId, prApplication, prDesc, prLinkPub, prLinkRepo, prTpKerja, prType } = req.body
+      const data = {
+        image: req.file === undefined ? '' : req.file.filename
+      }
+
+      if (prApplication.trim() && prDesc.trim() && prLinkPub && prLinkRepo.trim() && prTpKerja.trim() && prType.trim()) {
+        const result = await getDataPortofolioByIdModel(portofolioId)
+        if (result.length) {
+          const result = await updateDataPortofolioByIdModel(portofolioId, enId, prApplication, prDesc, prLinkPub, prLinkRepo, prTpKerja, prType, data.image)
+          if (result.affectedRows) {
+            res.status(200).send({
+              status: true,
+              message: `Portofolio With ID ${portofolioId} has been update`
+            })
+          } else {
+            res.status(400).send({
+              status: false,
+              message: 'Failed to Update Data '
+            })
+          }
         } else {
           res.status(400).send({
-            status: false,
-            message: 'Failed to Update Data '
+            success: false,
+            message: `Portofolio with id ${portofolioId} not Found`
           })
         }
       } else {
-        res.status(400).send({
+        res.send({
           success: false,
-          message: `Portofolio with id ${portofolioId} not Found`
+          message: 'All Field must be filled!'
         })
       }
     } catch (error) {
       res.status(500).send({
         success: false,
-        message: 'Internal server error!'
+        message: 'Internal server error !'
       })
+      console.log(error)
     }
   },
   deleteDataportofolioById: async (req, res) => {

@@ -75,12 +75,18 @@ module.exports = {
   updateEngineer: async (req, res) => {
     try {
       const { engineerId } = req.params
-      const { enJobTittle, enJobType, enOrigin, enDesc, enFtProfile } = req.body
+      const { acId, enJobTittle, enJobType, enOrigin, enDesc } = req.body
 
-      if (enJobTittle.trim() && enJobType.trim() && enOrigin && enDesc.trim() && enFtProfile.trim()) {
+      const data = {
+        image: req.file === undefined ? '' : req.file.filename
+      }
+
+      console.log(req.body)
+      console.log(data.image)
+      if (enJobTittle.trim() && enJobType.trim() && enOrigin && enDesc.trim() && data.image.trim()) {
         const result = await getDataEngineerByIdModel(engineerId)
         if (result.length) {
-          const result = await updateEngineerModel(engineerId, enJobTittle, enJobType, enOrigin, enDesc, enFtProfile)
+          const result = await updateEngineerModel(engineerId, acId, enJobTittle, enJobType, enOrigin, enDesc, data.image)
           if (result.affectedRows) {
             res.status(200).send({
               status: true,
@@ -107,8 +113,9 @@ module.exports = {
     } catch (error) {
       res.status(500).send({
         success: false,
-        message: 'Internal server error!'
+        message: 'Internal server error !'
       })
+      console.log(error)
     }
   },
   searchEngineer: async (req, res) => {
@@ -196,6 +203,7 @@ module.exports = {
         success: false,
         message: 'Internal server error!'
       })
+      console.log(error)
     }
   }
 }

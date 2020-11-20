@@ -2,12 +2,14 @@ const db = require('../helpers/db')
 
 module.exports = {
   createHireCompanyModel: (data) => {
-    console.log(data)
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO company SET ?'
-      db.query(query, data, (error, results, _fields) => {
+      db.query(query, data, (error, result, _fields) => {
         if (!error) {
-          resolve(results)
+          const newResult = {
+            id: result.insertId
+          }
+          resolve(newResult)
         } else {
           reject(error)
         }
@@ -17,9 +19,9 @@ module.exports = {
   getAllDataCompanyModel: () => {
     return new Promise((resolve, reject) => {
       const querySelect = 'SELECT * FROM company cn JOIN account ac ON ac.ac_id = cn.ac_id'
-      db.query(querySelect, (error, results, _fields) => {
+      db.query(querySelect, (error, result, _fields) => {
         if (!error) {
-          resolve(results)
+          resolve(result)
         } else {
           reject(error)
         }
@@ -39,12 +41,10 @@ module.exports = {
       })
     })
   },
-  updateCompanyModel: (companyId, cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, cnFtProfile) => {
+  updateCompanyModel: (companyId, cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, data) => {
     return new Promise((resolve, reject) => {
-      console.log(companyId)
-      const query = `UPDATE company SET cn_name = '${cnName}', cn_position = '${cnPosition}', cn_part = '${cnPart}', cn_city = '${cnCity}', cn_desc = '${cnDesc}', cn_instagram = '${cnInstagram}', cn_linkedin = '${cnLinkedIn}', cn_foto_profile = '${cnFtProfile}', cn_updated_at = CURRENT_TIMESTAMP WHERE 
+      const query = `UPDATE company SET cn_name = '${cnName}', cn_position = '${cnPosition}', cn_part = '${cnPart}', cn_city = '${cnCity}', cn_desc = '${cnDesc}', cn_instagram = '${cnInstagram}', cn_linkedin = '${cnLinkedIn}', cn_foto_profile= '${data}', cn_updated_at = CURRENT_TIMESTAMP WHERE 
       cn_id = '${companyId}'`
-      console.log(query)
       db.query(query, (err, result, _fields) => {
         if (!err) {
           resolve(result)

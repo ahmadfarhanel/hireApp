@@ -3,7 +3,6 @@ module.exports = {
   createHireCompany: async (req, res) => {
     try {
       const { cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, cnFtProfile } = req.body
-      console.log(req.body)
       const result = await createHireCompanyModel(cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, cnFtProfile)
       if (result.affectedRows) {
         res.status(200).send({
@@ -42,7 +41,7 @@ module.exports = {
     } catch (error) {
       res.status(500).send({
         success: false,
-        message: 'Internal Server Error!'
+        message: 'Internal Server Error !'
       })
     }
   },
@@ -74,13 +73,17 @@ module.exports = {
   updateCompany: async (req, res) => {
     try {
       const { companyId } = req.params
-      const { cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, cnFtProfile } = req.body
+      const { cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn } = req.body
+      const data = {
+        image: req.file === undefined ? '' : req.file.filename
+      }
       console.log(req.body)
+      console.log(data.image)
 
-      if (cnName.trim() && cnPosition.trim() && cnPart.trim() && cnCity.trim() && cnDesc.trim() && cnInstagram.trim() && cnLinkedIn.trim() && cnFtProfile.trim()) {
+      if (cnName.trim() && cnPosition.trim() && cnPart.trim() && cnCity.trim() && cnDesc.trim() && cnInstagram.trim() && cnLinkedIn.trim()) {
         const result = await getDataCompanyByIdModel(companyId)
         if (result.length) {
-          const result = await updateCompanyModel(companyId, cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, cnFtProfile)
+          const result = await updateCompanyModel(companyId, cnName, cnPosition, cnPart, cnCity, cnDesc, cnInstagram, cnLinkedIn, data.image)
           if (result.affectedRows) {
             res.status(200).send({
               status: true,
@@ -109,6 +112,7 @@ module.exports = {
         success: false,
         message: 'Internal server error!'
       })
+      console.log(error)
     }
   }
 }

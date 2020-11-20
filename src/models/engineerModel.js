@@ -1,13 +1,15 @@
 const db = require('../helpers/db')
 
 module.exports = {
-  createHireEngineerModel: (acId) => {
-    console.log(acId)
+  createHireEngineerModel: (setData, res) => {
+    const DataEngineer = {
+      acId: res.insertId
+    }
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO engineer SET ? '
-      db.query(query, { ac_id: acId }, (error, results, _fields) => {
+      db.query(query, { ac_id: DataEngineer.acId }, (error, results, _fields) => {
         if (!error) {
-          resolve(results)
+          resolve(res)
         } else {
           reject(error)
         }
@@ -38,9 +40,9 @@ module.exports = {
       })
     })
   },
-  updateEngineerModel: (engineerId, enJobTittle, enJobType, enOrigin, enDesc, enFtProfile) => {
+  updateEngineerModel: (engineerId, acId, enJobTittle, enJobType, enOrigin, enDesc, enFtProfile) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE engineer SET en_job_tittle = '${enJobTittle}', en_job_type = '${enJobType}', en_origin = '${enOrigin}', en_desc = '${enDesc}', en_ft_profile = '${enFtProfile}', en_updated_at = CURRENT_TIMESTAMP WHERE 
+      db.query(`UPDATE engineer SET ac_id = '${acId}', en_job_tittle = '${enJobTittle}', en_job_type = '${enJobType}', en_origin = '${enOrigin}', en_desc = '${enDesc}', en_foto_profile = '${enFtProfile}', en_updated_at = CURRENT_TIMESTAMP WHERE 
       en_id = '${engineerId}'`, (err, result, _fields) => {
         if (!err) {
           resolve(result)
@@ -85,6 +87,8 @@ module.exports = {
         FROM engineer 
                en JOIN account ac ON ac.ac_id = en.ac_id
         GROUP by ac.ac_name
+        LIMIT  ${data.limit}
+        OFFSET  ${data.offset}
         `
       } else if (data.filter === 'skill') {
         query = `
@@ -96,6 +100,8 @@ module.exports = {
                JOIN account ac ON ac.ac_id = en.ac_id
                JOIN skill sk ON sk.en_id = en.en_id       
         GROUP by sk.sk_name_skill 
+        LIMIT ${data.limit}
+        OFFSET ${data.offset}
         `
       } else if (data.filter === 'lokasi') {
         query = `
@@ -106,6 +112,8 @@ module.exports = {
         FROM engineer en 
                 JOIN account ac ON ac.ac_id = en.ac_id      
         GROUP by en.en_origin 
+        LIMIT ${data.limit}
+        OFFSET ${data.offset}
         `
       } else if (data.filter === 'freelance') {
         query = `
@@ -116,6 +124,8 @@ module.exports = {
                   JOIN account ac ON ac.ac_id = en.ac_id 
           WHERE en.en_job_type = 'freelance'     
           GROUP by en.en_job_type
+          LIMIT ${data.limit}
+          OFFSET ${data.offset}
           
         `
       } else {
@@ -127,6 +137,8 @@ module.exports = {
                   JOIN account ac ON ac.ac_id = en.ac_id 
           WHERE en.en_job_type = 'fulltime'         
           GROUP by en.en_job_type
+          LIMIT  ${data.limit}
+          OFFSET  ${data.offset}
       `
       }
 

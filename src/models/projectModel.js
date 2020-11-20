@@ -1,14 +1,14 @@
 const db = require('../helpers/db')
 
 module.exports = {
-  createProjectModel: (dataCreate) => {
+  createProjectModel: (data) => {
     return new Promise((resolve, reject) => {
       const query = `
           INSERT INTO project
           SET ?
         `
 
-      db.query(query, dataCreate, (error, results, _fields) => {
+      db.query(query, data, (error, results, _fields) => {
         if (!error) {
           resolve(results)
         } else {
@@ -31,14 +31,12 @@ module.exports = {
       })
     })
   },
-  updateDataProjectByIdModel: (projectId, data) => {
-    console.log(data)
+  updateDataProjectByIdModel: (projectId, cnId, pjProjectName, pjDesc, pjDeadline, data) => {
     return new Promise((resolve, reject) => {
       const query = `
-      UPDATE project
-         SET ? 
-       WHERE pj_id = ${projectId}
-    `
+      UPDATE project SET cn_id = '${cnId}', pj_project_name = '${pjProjectName}', 
+      pj_desc = '${pjDesc}', pj_deadline = '${pjDeadline}', pj_picture = '${data}', 
+      pj_updated_at = CURRENT_TIMESTAMP WHERE pj_id = '${projectId}'`
       db.query(query, data, (error, results, _fields) => {
         if (!error) {
           resolve(results)

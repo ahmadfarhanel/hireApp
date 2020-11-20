@@ -1,25 +1,56 @@
-const { createHireAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel, updatePatchAccountModel } = require('../models/accountModel')
+const { registerAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel, updatePatchAccountModel, getDataAccountModel } = require('../models/accountModel')
+const bcrypt = require('bcrypt')
+const { getUserModel } = require('../models/userModel')
+
 module.exports = {
-  createHireAccount: async (req, res) => {
+  registerAccount: async (req, res) => {
+    const { acName, acNoHp, acEmail, acPassword, acLevel, cnName, cnPosition } = req.body
+    const salt = bcrypt.genSaltSync(10)
+    const encryptPassword = bcrypt.hashSync(acPassword, salt)
+
+    const queryCheck = `SELECT ac_email FROM account WHERE ac_email=${acEmail}`
+    console.log(queryCheck)
+
+    const setData = {
+      ac_name: acName,
+      ac_no_hp: acNoHp,
+      ac_email: acEmail,
+      ac_password: encryptPassword,
+      ac_level: acLevel,
+      cn_name: cnName,
+      cn_position: cnPosition,
+      ac_created_at: new Date()
+    }
     try {
-      const { acName, acEmail, acNoHp, acPassword, acLevel, cnName, cnPosition } = req.body
-      const result = await createHireAccountModel(acName, acEmail, acNoHp, acPassword, acLevel, cnName, cnPosition)
-      if (result.affectedRows) {
+      const checkEmail = await getUserModel(acEmail)
+      console.log(checkEmail)
+      if (checkEmail.length >= 1) {
         res.status(200).send({
-          success: true,
-          message: 'Succes Add Account'
+          success: false,
+          message: 'Data Sudah Ada'
         })
       } else {
-        res.status(404).send({
-          success: false,
-          message: 'Failed Add Account'
-        })
+        const result = await registerAccountModel(setData)
+        if (result.affectedRows) {
+          delete result.affectedRows
+          res.status(200).send({
+            success: true,
+            message: 'Succes To Register',
+            data: result
+          })
+        } else {
+          res.status(404).send({
+            success: false,
+            message: 'Failed Add Account'
+          })
+        }
       }
     } catch (error) {
       res.status(500).send({
         success: true,
         message: 'Internal Server Error!'
       })
+      console.log(error)
     }
   },
   getAllData: (req, res) => {
@@ -67,7 +98,6 @@ module.exports = {
   getAccountById: async (req, res) => {
     try {
       const { accountId } = req.params
-      console.log(req.params)
       const result = await getAccountByIdModel(accountId)
       if (result.length) {
         res.status(200).send({
@@ -123,12 +153,16 @@ module.exports = {
     try {
       const { accountId } = req.params
       const { acName, acEmail, acNoHp, acPassword, acLevel } = req.body
-      console.log(acName.trim())
-      if (acName.trim() && acEmail.trim() && acNoHp.trim() && acPassword.trim() && acLevel.trim()) {
+      const salt = bcrypt.genSaltSync(10)
+      const encryptPassword = bcrypt.hashSync(acPassword, salt)
+
+      const data = {
+        acPassword: encryptPassword
+      }
+      if (acName.trim() && acEmail.trim() && acNoHp.trim() && acLevel.trim()) {
         const result = await getAccountByIdModel(accountId)
         if (result.length) {
-          const result = await updateAccountModel(accountId, acName, acEmail, acNoHp, acPassword, acLevel)
-          console.log(result)
+          const result = await updateAccountModel(accountId, acName, acEmail, acNoHp, data.acPassword, acLevel)
           if (result.affectedRows) {
             res.status(200).send({
               status: true,
@@ -175,7 +209,6 @@ module.exports = {
         const result = await getAccountByIdModel(accountId)
         if (result.length) {
           const dataColumn = Object.entries(req.body).map(item => {
-            console.log(item[0])
             // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
             const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
             return queryDynamic
@@ -208,6 +241,30 @@ module.exports = {
       res.status(500).send({
         success: false,
         message: 'Internal server error!'
+      })
+      console.log(error)
+    }
+  },
+  getAllAccount: async (req, res, _next) => {
+    try {
+      const { acEmail } = req.body
+      const result = await getDataAccountModel(acEmail)
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Engineer List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item engineer not found!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
       })
       console.log(error)
     }
