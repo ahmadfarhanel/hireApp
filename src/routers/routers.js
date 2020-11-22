@@ -31,7 +31,7 @@ router.get('/engineer/:engineerId', authorizationEngineer, getDataEngineerById)
 router.put('/engineer/:engineerId', authorizationEngineer, uploadImage, updateEngineer)
 router.get('/filter', authorizationEngineer, getFilterEngineer)
 
-router.get('/engineer', authorizationEngineer, getAllExperience)
+router.get('/experience', authorizationEngineer, getAllExperience)
 router.post('/experience/createExperience', authorizationEngineer, createHireExperience)
 router.get('/experience/:experienceId', authorizationEngineer, getDataExperienceById)
 router.put('/experience/:experienceId', authorizationEngineer, updateDataExperienceById)
