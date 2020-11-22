@@ -1,4 +1,4 @@
-const { createHireExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel } = require('../models/experienceModel')
+const { createHireExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel, getAllDataExperienceModel } = require('../models/experienceModel')
 module.exports = {
   createHireExperience: async (req, res) => {
     try {
@@ -108,6 +108,29 @@ module.exports = {
       res.status(500).send({
         success: false,
         message: 'Internal server error!'
+      })
+    }
+  },
+  getAllExperience: async (_req, res, _next) => {
+    try {
+      const result = await getAllDataExperienceModel()
+      console.log(result)
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Engineer List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item engineer not found!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
       })
     }
   }

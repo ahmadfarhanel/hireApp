@@ -62,5 +62,17 @@ module.exports = {
         }
       })
     })
+  },
+  getAllDataExperienceModel: () => {
+    return new Promise((resolve, reject) => {
+      const querySelect = 'SELECT * FROM experience ex JOIN engineer en ON en.en_id = ex.ac_id'
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
   }
 }
