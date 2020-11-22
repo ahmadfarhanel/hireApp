@@ -8,9 +8,6 @@ module.exports = {
     const salt = bcrypt.genSaltSync(10)
     const encryptPassword = bcrypt.hashSync(acPassword, salt)
 
-    const queryCheck = `SELECT ac_email FROM account WHERE ac_email=${acEmail}`
-    console.log(queryCheck)
-
     const setData = {
       ac_name: acName,
       ac_no_hp: acNoHp,

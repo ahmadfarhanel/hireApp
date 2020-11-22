@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2020 at 10:16 AM
+-- Generation Time: Nov 22, 2020 at 01:36 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -45,7 +45,8 @@ CREATE TABLE `account` (
 INSERT INTO `account` (`ac_id`, `ac_name`, `ac_email`, `ac_no_hp`, `ac_password`, `ac_level`, `ac_created_at`, `ac_updated_at`) VALUES
 (1, 'AFAREL RAMDANI', 'afarelshop@gmail.com', '08', '$2b$10$HMANlm.sn4SRHHotSCxPGuppeb4qK8UuNExTWNGI8ZJcXPfiEQSUe', 0, '2020-11-20 06:04:50', '2020-11-20 06:04:50'),
 (2, 'Pasific', 'pasific@gmail.com', '08', '$2b$10$GhGOkFymB9nYf63s5VZZAOaLG0z2iRq24Yc90dBeTiv1lEh.ME.0a', 1, '2020-11-20 06:05:27', '2020-11-20 06:05:27'),
-(3, 'Sejahtera Abadi', 'sejahteraabadi@gmail.com', '08', '$2b$10$7wGt8hXjcCwyMs.unLt/guzN2ALLCaXIdE1SLFUn6b3Km6rVgp0JS', 1, '2020-11-20 06:09:39', '2020-11-20 06:09:39');
+(3, 'Sejahtera Abadi', 'sejahteraabadi@gmail.com', '08', '$2b$10$7wGt8hXjcCwyMs.unLt/guzN2ALLCaXIdE1SLFUn6b3Km6rVgp0JS', 1, '2020-11-20 06:09:39', '2020-11-20 06:09:39'),
+(9, 'Sejahtera Abadi', 'euforiatvs@gmail.com', '08', '$2b$10$K3MYNVUHe3FGPMw2KOJ0rO9TFDIOWLDAmLtjTr0lmqebzNhPmG18W', 0, '2020-11-22 12:23:17', '2020-11-22 12:23:17');
 
 -- --------------------------------------------------------
 
@@ -56,14 +57,14 @@ INSERT INTO `account` (`ac_id`, `ac_name`, `ac_email`, `ac_no_hp`, `ac_password`
 CREATE TABLE `company` (
   `cn_id` int(11) UNSIGNED NOT NULL,
   `ac_id` int(11) NOT NULL,
-  `cn_name` varchar(100) NOT NULL,
-  `cn_position` varchar(50) NOT NULL,
-  `cn_part` varchar(50) NOT NULL,
-  `cn_city` varchar(50) NOT NULL,
-  `cn_desc` text NOT NULL,
-  `cn_instagram` varchar(50) NOT NULL,
-  `cn_linkedin` varchar(50) NOT NULL,
-  `cn_foto_profile` text NOT NULL,
+  `cn_name` varchar(100) DEFAULT NULL,
+  `cn_position` varchar(50) DEFAULT NULL,
+  `cn_part` varchar(50) DEFAULT NULL,
+  `cn_city` varchar(50) DEFAULT NULL,
+  `cn_desc` text DEFAULT NULL,
+  `cn_instagram` varchar(50) DEFAULT NULL,
+  `cn_linkedin` varchar(50) DEFAULT NULL,
+  `cn_foto_profile` text DEFAULT NULL,
   `cn_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `cn_updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -73,11 +74,8 @@ CREATE TABLE `company` (
 --
 
 INSERT INTO `company` (`cn_id`, `ac_id`, `cn_name`, `cn_position`, `cn_part`, `cn_city`, `cn_desc`, `cn_instagram`, `cn_linkedin`, `cn_foto_profile`, `cn_created_at`, `cn_updated_at`) VALUES
-(350, 436, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:05:27', '2020-11-20 06:05:27'),
-(351, 437, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:09:39', '2020-11-20 06:09:39'),
-(352, 438, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:10:39', '2020-11-20 06:10:39'),
-(353, 439, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:11:40', '2020-11-20 06:11:40'),
-(355, 8, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:14:23', '2020-11-20 06:14:23');
+(350, 2, 'PT Mencari Cinta Sejati', 'Staff', '', '', '', '', '', '', '2020-11-20 06:05:27', '2020-11-20 06:05:27'),
+(351, 3, 'PT Melia Sejahtera', 'Staff', '', '', '', '', '', '', '2020-11-20 06:09:39', '2020-11-20 06:09:39');
 
 -- --------------------------------------------------------
 
@@ -87,12 +85,12 @@ INSERT INTO `company` (`cn_id`, `ac_id`, `cn_name`, `cn_position`, `cn_part`, `c
 
 CREATE TABLE `engineer` (
   `en_id` int(11) UNSIGNED NOT NULL,
-  `ac_id` int(11) DEFAULT NULL,
-  `en_job_tittle` varchar(50) NOT NULL,
-  `en_job_type` enum('freelance','fulltime','','') NOT NULL,
-  `en_origin` varchar(50) NOT NULL,
-  `en_desc` text NOT NULL,
-  `en_foto_profile` varchar(100) NOT NULL,
+  `ac_id` int(11) NOT NULL,
+  `en_job_tittle` varchar(50) DEFAULT NULL,
+  `en_job_type` enum('freelance','fulltime','','') DEFAULT NULL,
+  `en_origin` varchar(50) DEFAULT NULL,
+  `en_desc` text DEFAULT NULL,
+  `en_foto_profile` varchar(100) DEFAULT NULL,
   `en_created_at` timestamp NULL DEFAULT current_timestamp(),
   `en_updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -102,7 +100,8 @@ CREATE TABLE `engineer` (
 --
 
 INSERT INTO `engineer` (`en_id`, `ac_id`, `en_job_tittle`, `en_job_type`, `en_origin`, `en_desc`, `en_foto_profile`, `en_created_at`, `en_updated_at`) VALUES
-(117, 435, '', 'freelance', '', '', '', '2020-11-20 06:04:50', '2020-11-20 06:04:50');
+(117, 1, '1', 'freelance', '', '', '', '2020-11-20 06:04:50', '2020-11-20 06:04:50'),
+(118, 9, '', 'freelance', '', '', '', '2020-11-22 12:23:17', '2020-11-22 12:23:17');
 
 -- --------------------------------------------------------
 
@@ -113,11 +112,11 @@ INSERT INTO `engineer` (`en_id`, `ac_id`, `en_job_tittle`, `en_job_type`, `en_or
 CREATE TABLE `experience` (
   `ex_id` int(11) UNSIGNED NOT NULL,
   `en_id` int(11) UNSIGNED DEFAULT NULL,
-  `ex_position` varchar(50) NOT NULL,
-  `ex_company` varchar(50) NOT NULL,
-  `ex_start` date NOT NULL,
-  `ex_end` date NOT NULL,
-  `ex_desc` text NOT NULL
+  `ex_position` varchar(50) DEFAULT NULL,
+  `ex_company` varchar(50) DEFAULT NULL,
+  `ex_start` date DEFAULT NULL,
+  `ex_end` date DEFAULT NULL,
+  `ex_desc` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -130,9 +129,9 @@ CREATE TABLE `hire` (
   `hr_id` int(11) UNSIGNED NOT NULL,
   `en_id` int(11) UNSIGNED DEFAULT NULL,
   `pj_id` int(11) UNSIGNED DEFAULT NULL,
-  `hr_price` bigint(12) UNSIGNED NOT NULL,
-  `hr_message` text NOT NULL,
-  `hr_status` enum('wait','reject','approve','') NOT NULL,
+  `hr_price` bigint(12) UNSIGNED DEFAULT NULL,
+  `hr_message` text DEFAULT NULL,
+  `hr_status` enum('wait','reject','approve','') DEFAULT NULL,
   `hr_date_confirm` datetime NOT NULL,
   `hr_created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -145,14 +144,14 @@ CREATE TABLE `hire` (
 
 CREATE TABLE `portofolio` (
   `pr_id` int(11) UNSIGNED NOT NULL,
-  `en_id` int(11) UNSIGNED NOT NULL,
-  `pr_application` varchar(100) NOT NULL,
-  `pr_desc` text NOT NULL,
-  `pr_link_pub` varchar(100) NOT NULL,
-  `pr_link_repo` varchar(100) NOT NULL,
-  `pr_tp_kerja` varchar(100) NOT NULL,
-  `pr_type` enum('mobile application','web application','','') NOT NULL,
-  `pr_gambar` varchar(100) NOT NULL
+  `en_id` int(11) UNSIGNED DEFAULT NULL,
+  `pr_application` varchar(100) DEFAULT NULL,
+  `pr_desc` text DEFAULT NULL,
+  `pr_link_pub` varchar(100) DEFAULT NULL,
+  `pr_link_repo` varchar(100) DEFAULT NULL,
+  `pr_tp_kerja` varchar(100) DEFAULT NULL,
+  `pr_type` enum('mobile application','web application','','') DEFAULT NULL,
+  `pr_gambar` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -164,12 +163,12 @@ CREATE TABLE `portofolio` (
 CREATE TABLE `project` (
   `pj_id` int(11) UNSIGNED NOT NULL,
   `cn_id` int(11) UNSIGNED DEFAULT NULL,
-  `pj_project_name` varchar(100) NOT NULL,
-  `pj_desc` text NOT NULL,
-  `pj_deadline` date NOT NULL,
-  `pj_picture` varchar(50) NOT NULL,
-  `pj_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `pj_updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `pj_project_name` varchar(100) DEFAULT NULL,
+  `pj_desc` text DEFAULT NULL,
+  `pj_deadline` date DEFAULT NULL,
+  `pj_picture` varchar(50) DEFAULT NULL,
+  `pj_created_at` timestamp NULL DEFAULT current_timestamp(),
+  `pj_updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -180,8 +179,8 @@ CREATE TABLE `project` (
 
 CREATE TABLE `skill` (
   `sk_id` int(11) UNSIGNED NOT NULL,
-  `en_id` int(11) NOT NULL,
-  `sk_name_skill` varchar(20) NOT NULL
+  `en_id` int(11) DEFAULT NULL,
+  `sk_name_skill` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -259,7 +258,7 @@ ALTER TABLE `skill`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `ac_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ac_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `company`
@@ -271,7 +270,7 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT for table `engineer`
 --
 ALTER TABLE `engineer`
-  MODIFY `en_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
+  MODIFY `en_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT for table `experience`
