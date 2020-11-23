@@ -1,4 +1,4 @@
-const { createProjectModel, getDataProjectByIdModel, updateDataProjectByIdModel, deleteDataProjectByIdModel } = require('../models/projectModel')
+const { createProjectModel, getDataProjectByIdModel, updateDataProjectByIdModel, deleteDataProjectByIdModel, getAllDataProjectModel } = require('../models/projectModel')
 module.exports = {
   createProject: async (req, res) => {
     try {
@@ -126,6 +126,29 @@ module.exports = {
       res.status(500).send({
         success: false,
         message: 'Internal server error!'
+      })
+    }
+  },
+  getAllProject: async (_req, res, _next) => {
+    try {
+      const result = await getAllDataProjectModel()
+      console.log(result)
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Engineer List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item engineer not found!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
       })
     }
   }

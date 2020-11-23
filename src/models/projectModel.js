@@ -63,5 +63,17 @@ module.exports = {
         }
       })
     })
+  },
+  getAllDataProjectModel: () => {
+    return new Promise((resolve, reject) => {
+      const querySelect = 'SELECT * FROM project pj JOIN company cn ON cn.cn_id = pj.cn_id'
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
   }
 }
