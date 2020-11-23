@@ -47,7 +47,7 @@ router.post('/portofolio/createPortofolio', authorizationEngineer, uploadImage, 
 router.get('/portofolio/:portofolioId', authorizationEngineer, getDataPortofolioById)
 router.put('/portofolio/:portofolioId', authorizationEngineer, uploadImage, updateDataportofolioById)
 router.delete('/portofolio/:portofolioId', authorizationEngineer, deleteDataportofolioById)
-
+// addproject
 router.get('/project', authorizationCompany, getAllProject)
 router.post('/project/createProject', authorizationCompany, uploadImage, createProject)
 router.get('/project/:projectId', authorizationCompany, getDataProjectById)
