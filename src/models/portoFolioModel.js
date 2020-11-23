@@ -63,5 +63,17 @@ module.exports = {
         }
       })
     })
+  },
+  getAllDataPortofolioModel: () => {
+    return new Promise((resolve, reject) => {
+      const querySelect = 'SELECT * FROM portofolio pr JOIN engineer en ON en.en_id = pr.en_id'
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
   }
 }

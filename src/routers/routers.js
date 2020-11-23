@@ -5,7 +5,7 @@ const { getAllCompany, getDataCompanyById, updateCompany } = require('../control
 const { getAllEngineer, getDataEngineerById, updateEngineer, searchEngineer, getFilterEngineer } = require('../controllers/engineerController')
 const { createHireExperience, getDataExperienceById, updateDataExperienceById, deleteDataExperienceById, getAllExperience } = require('../controllers/experienceController')
 const { createHire, getDataHireById, updateDataHireById, deleteDataHireById, updateStatusHireById } = require('../controllers/hireController')
-const { createPortofolio, getDataPortofolioById, updateDataportofolioById, deleteDataportofolioById } = require('../controllers/portoFolioController')
+const { createPortofolio, getDataPortofolioById, updateDataportofolioById, deleteDataportofolioById, getAllPortofolio } = require('../controllers/portoFolioController')
 const { createProject, getDataProjectById, updateDataProjectById, deleteDataProjectById, getAllProject } = require('../controllers/projectController')
 const { createSkill, getDataSkillById, updateDataSkillById, deleteDataSkillById } = require('../controllers/skillController')
 const { authorizationEngineer, authorizationCompany } = require('../../middleware/auth')
@@ -43,11 +43,12 @@ router.put('/hire/:hireId', authorizationCompany, updateDataHireById)
 router.put('/hire/status/:hireId', authorizationCompany, updateStatusHireById)
 router.delete('/hire/:hireId', authorizationCompany, deleteDataHireById)
 
+router.get('/portofolio', authorizationEngineer, getAllPortofolio)
 router.post('/portofolio/createPortofolio', authorizationEngineer, uploadImage, createPortofolio)
 router.get('/portofolio/:portofolioId', authorizationEngineer, getDataPortofolioById)
 router.put('/portofolio/:portofolioId', authorizationEngineer, uploadImage, updateDataportofolioById)
 router.delete('/portofolio/:portofolioId', authorizationEngineer, deleteDataportofolioById)
-// addproject
+
 router.get('/project', authorizationCompany, getAllProject)
 router.post('/project/createProject', authorizationCompany, uploadImage, createProject)
 router.get('/project/:projectId', authorizationCompany, getDataProjectById)
