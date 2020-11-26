@@ -1,4 +1,4 @@
-const { createHireExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel, getAllDataExperienceModel } = require('../models/experienceModel')
+const { createHireExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel, getAllDataExperienceModel, updatePatchExperienceModel } = require('../models/experienceModel')
 module.exports = {
   createHireExperience: async (req, res) => {
     try {
@@ -118,13 +118,13 @@ module.exports = {
       if (result.length) {
         res.status(200).send({
           success: true,
-          message: 'Engineer List',
+          message: 'Experience List',
           data: result
         })
       } else {
         res.status(404).send({
           success: false,
-          message: 'Item engineer not found!'
+          message: 'Item Experience not found!'
         })
       }
     } catch (error) {
@@ -132,6 +132,59 @@ module.exports = {
         success: false,
         message: 'Internal Server Error!'
       })
+    }
+  },
+  updatePatchExperience: async (req, res) => {
+    try {
+      const { experienceId } = req.params
+      const date = new Date()
+      const {
+        en_id = '',
+        ex_position = '',
+        ex_company = '',
+        ex_start = '',
+        ex_end = '',
+        ex_desc = ''
+      } = req.body
+
+      if (en_id.trim() || ex_position.trim() || ex_company.trim() || ex_start.trim() || ex_end.trim() || ex_desc.trim()) {
+        const result = await getDataExperienceByIdModel(experienceId)
+        if (result.length) {
+          const dataColumn = Object.entries(req.body).map(item => {
+            // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+            const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+            return queryDynamic
+          })
+          const result = await updatePatchExperienceModel(experienceId, dataColumn, date)
+          if (result.affectedRows) {
+            res.status(200).send({
+              succes: true,
+              message: 'Data Berhasil Di Update'
+            })
+          } else {
+            res.status(400).send({
+              succes: true,
+              message: 'Failed To update Data '
+            })
+          }
+        } else {
+          res.status(404).send({
+            succes: true,
+            message: `Experience with id ${experienceId} not Found `
+          })
+        }
+      } else {
+        res.status(400).send({
+          succes: true,
+          message: 'Some Field must be filled'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
+      console.log(error)
     }
   }
 }

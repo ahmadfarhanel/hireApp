@@ -75,5 +75,16 @@ module.exports = {
         }
       })
     })
+  },
+  updatePatchPortofolioModel: (portofolioId, dataColumn) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE portofolio SET ${dataColumn} WHERE pr_id = ${portofolioId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

@@ -1,4 +1,4 @@
-const { createHireCompanyModel, getAllDataCompanyModel, getDataCompanyByIdModel, updateCompanyModel } = require('../models/companyModel')
+const { createHireCompanyModel, getAllDataCompanyModel, getDataCompanyByIdModel, updateCompanyModel, updatePatchCompanyModel } = require('../models/companyModel')
 module.exports = {
   createHireCompany: async (req, res) => {
     try {
@@ -105,6 +105,48 @@ module.exports = {
         res.send({
           success: false,
           message: 'All Field must be filled!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
+      console.log(error)
+    }
+  },
+  updatePatchCompany: async (req, res) => {
+    try {
+      const { companyId } = req.params
+      const result = await getDataCompanyByIdModel(companyId)
+      const image = req.file === undefined ? result[0].cn_foto_profile : req.file.filename
+      if (result.length) {
+        const data = {
+          ...req.body,
+          cn_foto_profile: image
+        }
+        console.log(data)
+        const dataColumn = Object.entries(data).map(item => {
+          // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+          const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+          return queryDynamic
+        })
+        const result = await updatePatchCompanyModel(companyId, dataColumn)
+        if (result.affectedRows) {
+          res.status(200).send({
+            succes: true,
+            message: 'Data Berhasil Di Update'
+          })
+        } else {
+          res.status(400).send({
+            succes: true,
+            message: 'Failed To update Data '
+          })
+        }
+      } else {
+        res.status(404).send({
+          succes: true,
+          message: `Experience with id ${companyId} not Found `
         })
       }
     } catch (error) {

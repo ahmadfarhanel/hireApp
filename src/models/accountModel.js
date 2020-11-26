@@ -20,7 +20,7 @@ module.exports = {
       `
       db.query(query, insertData, async (err, res, _fields) => {
         if (!err) {
-          if (parseInt(setData.ac_level) === 0) {
+          if (parseInt(setData.ac_level) === 1) {
             await createHireEngineerModel(insertData, res)
           } else {
             await createHireCompanyModel({

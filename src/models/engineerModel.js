@@ -1,5 +1,7 @@
 const db = require('../helpers/db')
 
+const { getAllSkillByIdModel } = require('../models/skillModel')
+
 module.exports = {
   createHireEngineerModel: (setData, res) => {
     const DataEngineer = {
@@ -42,7 +44,9 @@ module.exports = {
   },
   updateEngineerModel: (engineerId, acId, enJobTittle, enJobType, enOrigin, enDesc, enFtProfile) => {
     return new Promise((resolve, reject) => {
-      db.query(`UPDATE engineer SET ac_id = '${acId}', en_job_tittle = '${enJobTittle}', en_job_type = '${enJobType}', en_origin = '${enOrigin}', en_desc = '${enDesc}', en_foto_profile = '${enFtProfile}', en_updated_at = CURRENT_TIMESTAMP WHERE 
+      db.query(`UPDATE engineer SET ac_id = '${acId}', en_job_tittle = '${enJobTittle}', 
+      en_job_type = '${enJobType}', en_origin = '${enOrigin}', en_desc = '${enDesc}',
+      en_foto_profile = '${enFtProfile}', en_updated_at = CURRENT_TIMESTAMP WHERE 
       en_id = '${engineerId}'`, (err, result, _fields) => {
         if (!err) {
           resolve(result)
@@ -53,6 +57,8 @@ module.exports = {
     })
   },
   searchEngineerModel: (searchKey, searchValue, limit, offset, callback) => {
+    console.log(searchKey)
+    console.log(searchValue)
     const query = `SELECT en.en_id,
         ac.ac_id,
         ac.ac_name,
@@ -60,16 +66,33 @@ module.exports = {
         ac.ac_no_hp,
         en.en_job_tittle,
         en.en_job_type,
-        en.en_origin
+        en.en_origin,
+        sk.sk_name_skill
     FROM engineer en JOIN account ac ON (ac.ac_id = en.ac_id)
     JOIN skill sk ON (sk.en_id = en.en_id)
     WHERE ${searchKey} LIKE '%${searchValue}%'
     GROUP BY ac.ac_name
     LIMIT ${limit} 
     OFFSET ${offset}`
-    db.query(query, (err, result, _fields) => {
+    db.query(query, async (err, results, _fields) => {
       if (!err) {
-        callback(result)
+        const allEngineer = []
+        for (let i = 0; i < results.length; i++) {
+          const item = results[i]
+
+          const dataSkill = await getAllSkillByIdModel(item.en_id)
+          allEngineer[i] = {
+            en_id: item.en_id,
+            ac_id: item.ac_id,
+            ac_name: item.ac_name,
+            en_job_title: item.en_job_title,
+            en_job_type: item.en_job_type,
+            en_domicile: item.en_origin,
+            en_profile: item.en_profile,
+            en_skill: dataSkill
+          }
+        }
+        callback(allEngineer)
       } else {
         callback(err)
       }
@@ -81,70 +104,132 @@ module.exports = {
 
       if (data.filter === 'name') {
         query = `
-        SELECT ac.ac_name, 
+        SELECT en.en_id,
+               ac.ac_name, 
                en.en_job_tittle, 
-               en.en_job_type 
-        FROM engineer 
-               en JOIN account ac ON ac.ac_id = en.ac_id
-        GROUP by ac.ac_name
+               en.en_job_type ,
+               en.en_origin,
+               en.en_desc,
+               sk.sk_name_skill
+        FROM engineer en 
+        JOIN account ac ON 
+               ac.ac_id = en.ac_id
+        JOIN skill sk 
+               ON sk.en_id = en.en_id
+               ''      
+        GROUP by 
+              ac.ac_name
         LIMIT  ${data.limit}
         OFFSET  ${data.offset}
         `
       } else if (data.filter === 'skill') {
         query = `
-        SELECT ac.ac_name, 
+        SELECT en.en_id,
+               ac.ac_id,
+               ac.ac_name, 
                en.en_job_tittle, 
-               en.en_job_type,
-               sk.sk_name_skill 
+               en.en_job_type ,
+               en.en_origin,
+               en.en_desc,
+               sk.sk_name_skill
         FROM engineer en 
-               JOIN account ac ON ac.ac_id = en.ac_id
-               JOIN skill sk ON sk.en_id = en.en_id       
-        GROUP by sk.sk_name_skill 
+        JOIN account ac ON 
+               ac.ac_id = en.ac_id
+        LEFT JOIN skill sk 
+               ON sk.en_id = en.en_id      
+        GROUP by 
+               ac.ac_id
+        ORDER BY sk.sk_name_skill        
         LIMIT ${data.limit}
         OFFSET ${data.offset}
         `
       } else if (data.filter === 'lokasi') {
         query = `
-        SELECT ac.ac_name, 
-                en.en_job_tittle, 
-                en.en_job_type,
-                en.en_origin 
+        SELECT en.en_id,
+               ac.ac_id,
+               ac.ac_name, 
+               en.en_job_tittle, 
+               en.en_job_type ,
+               en.en_origin,
+               en.en_desc,
+               sk.sk_name_skill
         FROM engineer en 
-                JOIN account ac ON ac.ac_id = en.ac_id      
-        GROUP by en.en_origin 
+        JOIN account ac ON 
+               ac.ac_id = en.ac_id
+        LEFT JOIN skill sk 
+               ON sk.en_id = en.en_id      
+        GROUP by 
+               ac.ac_id
+        ORDER BY sk.sk_name_skill    
         LIMIT ${data.limit}
         OFFSET ${data.offset}
         `
       } else if (data.filter === 'freelance') {
         query = `
-          SELECT ac.ac_name, 
-                  en.en_job_tittle, 
-                  en.en_job_type
-          FROM engineer en 
-                  JOIN account ac ON ac.ac_id = en.ac_id 
-          WHERE en.en_job_type = 'freelance'     
-          GROUP by en.en_job_type
+        SELECT en.en_id,
+               ac.ac_id,
+               ac.ac_name, 
+               en.en_job_tittle, 
+               en.en_job_type ,
+               en.en_origin,
+               en.en_desc,
+               sk.sk_name_skill
+        FROM engineer en 
+        JOIN account ac ON 
+               ac.ac_id = en.ac_id
+        LEFT JOIN skill sk 
+               ON sk.en_id = en.en_id
+        WHERE en_job_type = 'freelance'               
+        GROUP by 
+               ac.ac_id
+        ORDER BY en_job_type 
           LIMIT ${data.limit}
           OFFSET ${data.offset}
           
         `
       } else {
         query = `
-          SELECT ac.ac_name, 
-                  en.en_job_tittle, 
-                  en.en_job_type
-          FROM engineer en 
-                  JOIN account ac ON ac.ac_id = en.ac_id 
-          WHERE en.en_job_type = 'fulltime'         
-          GROUP by en.en_job_type
-          LIMIT  ${data.limit}
-          OFFSET  ${data.offset}
+        SELECT en.en_id,
+               ac.ac_id,
+               ac.ac_name, 
+               en.en_job_tittle, 
+               en.en_job_type ,
+               en.en_origin,
+               en.en_desc,
+               sk.sk_name_skill
+        FROM engineer en 
+        JOIN account ac ON 
+               ac.ac_id = en.ac_id
+        LEFT JOIN skill sk 
+               ON sk.en_id = en.en_id
+        WHERE en_job_type = 'fulltime'               
+        GROUP by 
+               ac.ac_id
+        ORDER BY en_job_type 
+        LIMIT ${data.limit}
+        OFFSET ${data.offset}
       `
       }
 
-      db.query(query, (error, results, _fields) => {
+      db.query(query, async (error, results, _fields) => {
         if (!error) {
-          resolve(results)
+          const allEngineer = []
+          for (let i = 0; i < results.length; i++) {
+            const item = results[i]
+
+            const dataSkill = await getAllSkillByIdModel(item.en_id)
+            allEngineer[i] = {
+              en_id: item.en_id,
+              ac_id: item.ac_id,
+              ac_name: item.ac_name,
+              en_job_title: item.en_job_title,
+              en_job_type: item.en_job_type,
+              en_domicile: item.en_origin,
+              en_profile: item.en_profile,
+              en_skill: dataSkill
+            }
+          }
+          resolve(allEngineer)
         } else {
           reject(error)
           console.log(error)

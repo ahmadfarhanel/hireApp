@@ -1,4 +1,4 @@
-const { createPortofolioModel, getDataPortofolioByIdModel, updateDataPortofolioByIdModel, deleteDataPortofolioByIdModel, getAllDataPortofolioModel } = require('../models/portoFolioModel')
+const { createPortofolioModel, getDataPortofolioByIdModel, updateDataPortofolioByIdModel, deleteDataPortofolioByIdModel, getAllDataPortofolioModel, updatePatchPortofolioModel } = require('../models/portoFolioModel')
 module.exports = {
   createPortofolio: async (req, res) => {
     try {
@@ -139,13 +139,13 @@ module.exports = {
       if (result.length) {
         res.status(200).send({
           success: true,
-          message: 'Engineer List',
+          message: 'Portofolio List',
           data: result
         })
       } else {
         res.status(404).send({
           success: false,
-          message: 'Item engineer not found!'
+          message: 'Item Portofolio not found!'
         })
       }
     } catch (error) {
@@ -153,6 +153,47 @@ module.exports = {
         success: false,
         message: 'Internal Server Error!'
       })
+    }
+  },
+  updatePatchPortofolio: async (req, res) => {
+    try {
+      const { portofolioId } = req.params
+      const result = await getDataPortofolioByIdModel(portofolioId)
+      const image = req.file === undefined ? result[0].pr_gambar : req.file.filename
+      if (result.length) {
+        const data = {
+          ...req.body,
+          pr_gambar: image
+        }
+        const dataColumn = Object.entries(data).map(item => {
+          // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+          const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+          return queryDynamic
+        })
+        const result = await updatePatchPortofolioModel(portofolioId, dataColumn)
+        if (result.affectedRows) {
+          res.status(200).send({
+            succes: true,
+            message: 'Data Berhasil Di Update'
+          })
+        } else {
+          res.status(400).send({
+            succes: true,
+            message: 'Failed To update Data '
+          })
+        }
+      } else {
+        res.status(404).send({
+          succes: true,
+          message: `Experience with id ${portofolioId} not Found `
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
+      console.log(error)
     }
   }
 }

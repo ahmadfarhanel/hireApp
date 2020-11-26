@@ -1,4 +1,4 @@
-const { createProjectModel, getDataProjectByIdModel, updateDataProjectByIdModel, deleteDataProjectByIdModel, getAllDataProjectModel } = require('../models/projectModel')
+const { createProjectModel, getDataProjectByIdModel, updateDataProjectByIdModel, deleteDataProjectByIdModel, getAllDataProjectModel, updatePatchProjectoModel } = require('../models/projectModel')
 module.exports = {
   createProject: async (req, res) => {
     try {
@@ -150,6 +150,47 @@ module.exports = {
         success: false,
         message: 'Internal Server Error!'
       })
+    }
+  },
+  updatePatchProject: async (req, res) => {
+    try {
+      const { projectId } = req.params
+      const result = await getDataProjectByIdModel(projectId)
+      const image = req.file === undefined ? result[0].pj_picture : req.file.filename
+      if (result.length) {
+        const data = {
+          ...req.body,
+          pj_picture: image
+        }
+        const dataColumn = Object.entries(data).map(item => {
+          // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+          const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+          return queryDynamic
+        })
+        const result = await updatePatchProjectoModel(projectId, dataColumn)
+        if (result.affectedRows) {
+          res.status(200).send({
+            succes: true,
+            message: 'Data Berhasil Di Update'
+          })
+        } else {
+          res.status(400).send({
+            succes: true,
+            message: 'Failed To update Data '
+          })
+        }
+      } else {
+        res.status(404).send({
+          succes: true,
+          message: `Experience with id ${projectId} not Found `
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
+      console.log(error)
     }
   }
 }

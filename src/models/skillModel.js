@@ -65,5 +65,35 @@ module.exports = {
         }
       })
     })
+  },
+  getAllDataSkillModel: () => {
+    return new Promise((resolve, reject) => {
+      const querySelect = 'SELECT * FROM skill sk JOIN engineer en ON en.en_id = sk.en_id'
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
+  },
+  getAllSkillByIdModel: (enId) => {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT sk_id,
+               sk_name_skill
+          FROM skill
+         WHERE ?
+      `
+
+      db.query(query, { en_id: enId }, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
   }
 }

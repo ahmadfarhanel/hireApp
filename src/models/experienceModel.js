@@ -65,12 +65,24 @@ module.exports = {
   },
   getAllDataExperienceModel: () => {
     return new Promise((resolve, reject) => {
-      const querySelect = 'SELECT * FROM experience ex JOIN engineer en ON en.en_id = ex.ac_id'
+      const querySelect = 'SELECT * FROM experience ex JOIN engineer en ON en.en_id = ex.en_id'
       db.query(querySelect, (error, results, _fields) => {
         if (!error) {
           resolve(results)
         } else {
           reject(error)
+          console.log(error)
+        }
+      })
+    })
+  },
+  updatePatchExperienceModel: (experienceId, dataColumn, date) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE experience SET ${dataColumn} WHERE ex_id = ${experienceId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
         }
       })
     })

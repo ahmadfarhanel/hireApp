@@ -54,5 +54,16 @@ module.exports = {
         }
       })
     })
+  },
+  updatePatchCompanyModel: (companyId, dataColumn) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE company SET ${dataColumn} WHERE cn_id = ${companyId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

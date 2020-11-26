@@ -75,5 +75,16 @@ module.exports = {
         }
       })
     })
+  },
+  updatePatchProjectoModel: (projectId, dataColumn) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE project SET ${dataColumn} WHERE pj_id = ${projectId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }
