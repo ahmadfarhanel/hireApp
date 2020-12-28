@@ -41,7 +41,7 @@ module.exports = {
         res.status(200).send({
           success: true,
           message: `Project with id ${projectId}`,
-          data: result[0]
+          data: result
         })
       } else {
         res.status(404).send({
@@ -157,6 +157,8 @@ module.exports = {
       const { projectId } = req.params
       const result = await getDataProjectByIdModel(projectId)
       const image = req.file === undefined ? result[0].pj_picture : req.file.filename
+      console.log(image)
+      console.log(result)
       if (result.length) {
         const data = {
           ...req.body,
