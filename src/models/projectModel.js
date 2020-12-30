@@ -86,5 +86,19 @@ module.exports = {
         }
       })
     })
+  },
+  getProjectByCnIdModel: (cnId) => {
+    console.log(cnId)
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM project WHERE cn_id = ${cnId}`
+
+      db.query(query, (err, result, fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }
