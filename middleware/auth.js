@@ -13,7 +13,7 @@ module.exports = {
             message: error.message
           })
         } else {
-          if (result.ac_level === 0) {
+          if (result.ac_level === 1) {
             next()
           } else {
             response.status(403).send({
@@ -41,7 +41,7 @@ module.exports = {
             message: error.message
           })
         } else {
-          if (result.ac_level === 1) {
+          if (result.ac_level === 0) {
             console.log(result)
             next()
           } else {
