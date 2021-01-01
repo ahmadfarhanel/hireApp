@@ -7,7 +7,7 @@ module.exports = {
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
-          message: 'Succes Add skill'
+          message: 'Succes To Add skill'
         })
       } else {
         res.status(404).send({
