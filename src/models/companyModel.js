@@ -65,5 +65,17 @@ module.exports = {
         }
       })
     })
+  },
+  getDataCompanyByAccountIdModel: (accountId) => {
+    return new Promise((resolve, reject) => {
+      const querySelect = `SELECT * FROM account ac JOIN company cn ON ac.ac_id = cn.ac_id WHERE ac.ac_id = ${accountId}`
+      db.query(querySelect, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

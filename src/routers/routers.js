@@ -1,7 +1,7 @@
 const { Router } = require('express')
 
 const { registerAccount, getAllData, getAccountById, deleteAccount, updateAccount, updatePatchAccount, getAllAccount } = require('../controllers/accountController')
-const { getAllCompany, getDataCompanyById, updateCompany, updatePatchCompany } = require('../controllers/companyController')
+const { getAllCompany, getDataCompanyById, updateCompany, updatePatchCompany, getDataCompanyByAccountId } = require('../controllers/companyController')
 const { getAllEngineer, getDataEngineerById, updateEngineer, searchEngineer, getFilterEngineer, getDataEngineerByAccountId } = require('../controllers/engineerController')
 const { createHireExperience, getDataExperienceById, updateDataExperienceById, deleteDataExperienceById, getAllExperience, updatePatchExperience } = require('../controllers/experienceController')
 const { createHire, getDataHireById, updateDataHireById, deleteDataHireById, updateStatusHireById } = require('../controllers/hireController')
@@ -21,7 +21,8 @@ router.delete('/account/:accountId', deleteAccount)
 router.put('/account/:accountId', updateAccount)
 router.patch('/account/:accountId', updatePatchAccount)
 
-router.get('/company/:companyId', getDataCompanyById)
+router.get('/company/:companyId', authorizationCompany, getDataCompanyById)
+router.get('/company/account/:accountId', authorizationCompany, getDataCompanyByAccountId)
 router.get('/company', authorizationCompany, getAllCompany)
 router.put('/company/:companyId', authorizationCompany, uploadImage, updateCompany)
 router.patch('/company/:companyId', uploadImage, updatePatchCompany)
