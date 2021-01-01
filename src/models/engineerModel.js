@@ -236,5 +236,17 @@ module.exports = {
         }
       })
     })
+  },
+  getDataEngineerByAccountIdModel: (accountId) => {
+    return new Promise((resolve, reject) => {
+      const querySelect = `SELECT * FROM account ac JOIN engineer en ON ac.ac_id = en.ac_id WHERE ac.ac_id = ${accountId}`
+      db.query(querySelect, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

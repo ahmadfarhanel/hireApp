@@ -1,4 +1,4 @@
-const { createHireEngineerModel, getAllDataEngineerModel, getDataEngineerByIdModel, updateEngineerModel, searchEngineerModel, getFilterEngineer } = require('../models/engineerModel')
+const { createHireEngineerModel, getAllDataEngineerModel, getDataEngineerByIdModel, updateEngineerModel, searchEngineerModel, getFilterEngineer, getDataEngineerByAccountIdModel } = require('../models/engineerModel')
 
 module.exports = {
   createHireEngineer: async (req, res) => {
@@ -204,6 +204,31 @@ module.exports = {
         message: 'Internal server error!'
       })
       console.log(error)
+    }
+  },
+  getDataEngineerByAccountId: async (req, res, next) => {
+    try {
+      const { accountId } = req.params
+      console.log(accountId)
+      const result = await getDataEngineerByAccountIdModel(accountId)
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: `Engineer with id ${accountId}`,
+          data: result[0]
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: `Data Engineer with id ${accountId} not found`
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
     }
   }
 }
