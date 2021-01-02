@@ -76,5 +76,17 @@ module.exports = {
         }
       })
     })
+  },
+  getAllDataHirerModel: () => {
+    return new Promise((resolve, reject) => {
+      const querySelect = 'SELECT * FROM hire'
+      db.query(querySelect, (error, results, _fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+        }
+      })
+    })
   }
 }
