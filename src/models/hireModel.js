@@ -1,10 +1,10 @@
 const db = require('../helpers/db')
 
 module.exports = {
-  createHireModel: (enId, pjId, hrPrice, hrMessage, hrStatus, hrDateConfirm) => {
+  createHireModel: (enId, pjId, hrPrice, hrMessage, hrStatus) => {
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO hire (en_id, pj_id, hr_price, hr_message, hr_status, hr_date_confirm) VALUES 
-        ('${enId}', '${pjId}', '${hrPrice}', '${hrMessage}', '${hrStatus}', '${hrDateConfirm}')`
+        ('${enId}', '${pjId}', '${hrPrice}', '${hrMessage}', '${hrStatus}', null)`
       console.log(query)
       db.query(query, (error, results, _fields) => {
         if (!error) {

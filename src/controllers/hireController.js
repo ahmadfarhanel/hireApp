@@ -2,9 +2,9 @@ const { createHireModel, getDataHireByIdModel, updateDataHireByIdModel, deleteDa
 module.exports = {
   createHire: async (req, res) => {
     try {
-      const { enId, pjId, hrPrice, hrMessage, hrStatus, hrDateConfirm } = req.body
+      const { enId, pjId, hrPrice, hrMessage, hrStatus } = req.body
       console.log(req.body)
-      const result = await createHireModel(enId, pjId, hrPrice, hrMessage, hrStatus, hrDateConfirm)
+      const result = await createHireModel(enId, pjId, hrPrice, hrMessage, hrStatus)
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
