@@ -88,5 +88,19 @@ module.exports = {
         }
       })
     })
+  },
+  getHireByEnIdModel: (enId) => {
+    console.log(enId)
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM hire WHERE en_id = ${enId}`
+
+      db.query(query, (err, result, fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

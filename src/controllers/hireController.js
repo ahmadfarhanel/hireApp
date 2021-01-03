@@ -1,4 +1,4 @@
-const { createHireModel, getDataHireByIdModel, updateDataHireByIdModel, deleteDataHireByIdModel, updateStatusHireByIdModel, getAllDataHirerModel } = require('../models/hireModel')
+const { createHireModel, getDataHireByIdModel, updateDataHireByIdModel, deleteDataHireByIdModel, updateStatusHireByIdModel, getAllDataHirerModel, getHireByEnIdModel } = require('../models/hireModel')
 module.exports = {
   createHire: async (req, res) => {
     try {
@@ -160,6 +160,31 @@ module.exports = {
         res.status(404).send({
           success: false,
           message: 'Item Hire not found!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
+      })
+    }
+  },
+  getHireByEnId: async (req, res) => {
+    try {
+      const { engineerId } = req.params
+      const result = await getHireByEnIdModel(engineerId)
+
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Hire List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item hire not found!'
         })
       }
     } catch (error) {

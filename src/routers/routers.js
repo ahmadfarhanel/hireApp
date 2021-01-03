@@ -4,7 +4,7 @@ const { registerAccount, getAllData, getAccountById, deleteAccount, updateAccoun
 const { getAllCompany, getDataCompanyById, updateCompany, updatePatchCompany, getDataCompanyByAccountId } = require('../controllers/companyController')
 const { getAllEngineer, getDataEngineerById, updateEngineer, searchEngineer, getFilterEngineer, getDataEngineerByAccountId } = require('../controllers/engineerController')
 const { createHireExperience, getDataExperienceById, updateDataExperienceById, deleteDataExperienceById, getAllExperience, updatePatchExperience } = require('../controllers/experienceController')
-const { createHire, getDataHireById, updateDataHireById, deleteDataHireById, updateStatusHireById, getAllDataHire } = require('../controllers/hireController')
+const { createHire, getDataHireById, updateDataHireById, deleteDataHireById, updateStatusHireById, getAllDataHire, getHireByEnId } = require('../controllers/hireController')
 const { createPortofolio, getDataPortofolioById, updateDataportofolioById, deleteDataportofolioById, getAllPortofolio, updatePatchPortofolio } = require('../controllers/portoFolioController')
 const { createProject, getDataProjectById, updateDataProjectById, deleteDataProjectById, getAllProject, updatePatchProject, getProjectByCnId } = require('../controllers/projectController')
 const { createSkill, getDataSkillById, updateDataSkillById, deleteDataSkillById, getAllSkill } = require('../controllers/skillController')
@@ -42,6 +42,7 @@ router.delete('/experience/:experienceId', authorizationEngineer, deleteDataExpe
 router.patch('/experience/:experienceId', updatePatchExperience)
 
 router.get('/hire', authorizationCompany, getAllDataHire)
+router.get('/hireByEngineer/:engineerId', authorizationEngineer, getHireByEnId)
 router.post('/hire/createHire', authorizationCompany, createHire)
 router.get('/hire/:hireId', authorizationCompany, getDataHireById)
 router.put('/hire/:hireId', authorizationCompany, updateDataHireById)
