@@ -30,7 +30,7 @@ router.patch('/company/:companyId', uploadImage, updatePatchCompany)
 router.get('/engineersearch', authorizationEngineer, searchEngineer)
 router.get('/engineer', authorizationCompany, getAllEngineer)
 router.get('/engineer/:engineerId', authorizationEngineer, getDataEngineerById)
-router.get('/engineer/account/:accountId', authorizationCompany, getDataEngineerByAccountId)
+router.get('/engineer/account/:accountId', authorizationEngineer, getDataEngineerByAccountId)
 router.put('/engineer/:engineerId', authorizationEngineer, uploadImage, updateEngineer)
 router.get('/filter', authorizationEngineer, getFilterEngineer)
 
