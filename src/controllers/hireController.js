@@ -1,4 +1,4 @@
-const { createHireModel, getDataHireByIdModel, updateDataHireByIdModel, deleteDataHireByIdModel, updateStatusHireByIdModel, getAllDataHirerModel, getHireByEnIdModel } = require('../models/hireModel')
+const { createHireModel, getDataHireByIdModel, updateDataHireByIdModel, deleteDataHireByIdModel, updateStatusHireByIdModel, getAllDataHirerModel, getHireByEnIdModel, getHireByProjectIdModel } = require('../models/hireModel')
 module.exports = {
   createHire: async (req, res) => {
     try {
@@ -192,6 +192,30 @@ module.exports = {
       res.status(500).send({
         success: false,
         message: 'Internal Server Error!'
+      })
+    }
+  },
+  getHireByProjectId: async (req, res) => {
+    try {
+      const { pjId } = req.params
+
+      const result = await getHireByProjectIdModel(pjId)
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'data hire:',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'data hire not found!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'internal server error'
       })
     }
   }

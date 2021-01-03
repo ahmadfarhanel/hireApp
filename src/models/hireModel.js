@@ -102,5 +102,16 @@ module.exports = {
         }
       })
     })
+  },
+  getHireByProjectIdModel: (pjId) => {
+    return new Promise((resolve, reject) => {
+      db.query(`SELECT * FROM hire WHERE pj_id = ${pjId}`, (err, result, fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }
