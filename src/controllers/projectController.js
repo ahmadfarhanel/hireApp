@@ -16,7 +16,8 @@ module.exports = {
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
-          message: 'Succes Add Project'
+          message: 'Succes Add Project',
+          data: result
         })
       } else {
         res.status(404).send({
