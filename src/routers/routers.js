@@ -47,7 +47,7 @@ router.get('/hireByEngineer/:engineerId', authorizationEngineer, getHireByEnId)
 router.post('/hire/createHire', authorizationCompany, createHire)
 router.get('/hire/:hireId', authorizationCompany, getDataHireById)
 router.put('/hire/:hireId', authorizationCompany, updateDataHireById)
-router.put('/hire/status/:hireId', authorizationCompany, updateStatusHireById)
+router.put('/hire/status/:hireId', authorizationEngineer, updateStatusHireById)
 router.delete('/hire/:hireId', authorizationCompany, deleteDataHireById)
 
 router.get('/portofolio', authorizationEngineer, getAllPortofolio)
