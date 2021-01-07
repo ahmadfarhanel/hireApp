@@ -1,22 +1,31 @@
-const { createHireExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel, getAllDataExperienceModel, updatePatchExperienceModel } = require('../models/experienceModel')
+const { createExperienceModel, getDataExperienceByIdModel, updateDataExperienceByIdModel, deleteDataExperienceByIdModel, getAllDataExperienceModel, updatePatchExperienceModel, getExperienceByEnIdModel } = require('../models/experienceModel')
 module.exports = {
-  createHireExperience: async (req, res) => {
+  createExperience: async (req, res) => {
     try {
-      const { exPosition, exCompany, exStart, exEnd, exDesc } = req.body
-      console.log(req.body)
-      const result = await createHireExperienceModel(exPosition, exCompany, exStart, exEnd, exDesc)
+      const { enId, exPosition, exCompany, exStart, exEnd, exDesc } = req.body
+      const data = {
+        en_id: enId,
+        ex_position: exPosition,
+        ex_company: exCompany,
+        ex_start: exStart,
+        ex_end: exEnd,
+        ex_desc: exDesc
+      }
+      console.log(data)
+      const result = await createExperienceModel(data)
       if (result.affectedRows) {
         res.status(200).send({
           success: true,
-          message: 'Succes Add Project'
+          message: 'Succes Add Experience'
         })
       } else {
         res.status(404).send({
           success: false,
-          message: 'Submit Project Failed'
+          message: 'Submit Experience Failed'
         })
       }
     } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: true,
         message: 'Internal Server Error!'
@@ -185,6 +194,31 @@ module.exports = {
         message: 'Internal server error!'
       })
       console.log(error)
+    }
+  },
+  getExperienceByEnId: async (req, res) => {
+    try {
+      const { engineerId } = req.params
+      const result = await getExperienceByEnIdModel(engineerId)
+
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Experience List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item Experience not found!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
+      })
     }
   }
 }
