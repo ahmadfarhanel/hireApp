@@ -1,4 +1,4 @@
-const { createPortofolioModel, getDataPortofolioByIdModel, updateDataPortofolioByIdModel, deleteDataPortofolioByIdModel, getAllDataPortofolioModel, updatePatchPortofolioModel } = require('../models/portoFolioModel')
+const { createPortofolioModel, getDataPortofolioByIdModel, updateDataPortofolioByIdModel, deleteDataPortofolioByIdModel, getAllDataPortofolioModel, updatePatchPortofolioModel, getPortofolioByEnIdModel } = require('../models/portoFolioModel')
 module.exports = {
   createPortofolio: async (req, res) => {
     try {
@@ -194,6 +194,31 @@ module.exports = {
         message: 'Internal server error!'
       })
       console.log(error)
+    }
+  },
+  getPortofolioeByEnId: async (req, res) => {
+    try {
+      const { engineerId } = req.params
+      const result = await getPortofolioByEnIdModel(engineerId)
+
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'portofolio List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item portofolio not found!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
+      })
     }
   }
 }
