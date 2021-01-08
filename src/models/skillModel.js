@@ -95,5 +95,18 @@ module.exports = {
         }
       })
     })
+  },
+  getDataSkillByEnIdModel: (engineerId) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM skill sk JOIN engineer en ON en.en_id = sk.en_id WHERE en.en_id = ${engineerId}`
+      db.query(query, (error, results, fields) => {
+        if (!error) {
+          resolve(results)
+        } else {
+          reject(error)
+          console.log(error)
+        }
+      })
+    })
   }
 }

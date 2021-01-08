@@ -1,4 +1,4 @@
-const { createSkillModel, getDataSkillByIdModel, updateDataSkillByIdModel, deleteDataSkillByIdModel, getAllDataSkillModel } = require('../models/skillModel')
+const { createSkillModel, getDataSkillByIdModel, updateDataSkillByIdModel, deleteDataSkillByIdModel, getAllDataSkillModel, getDataSkillByEnIdModel } = require('../models/skillModel')
 module.exports = {
   createSkill: async (req, res) => {
     try {
@@ -128,6 +128,32 @@ module.exports = {
         })
       }
     } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'Internal Server Error!'
+      })
+    }
+  },
+  getSkillByEnId: async (req, res) => {
+    try {
+      const { engineerId } = req.params
+      const result = await getDataSkillByEnIdModel(engineerId)
+
+      if (result.length) {
+        res.status(200).send({
+          success: true,
+          message: 'Skill List',
+          data: result
+        })
+      } else {
+        res.status(404).send({
+          success: false,
+          message: 'Item Skill not found!'
+        })
+      }
+    } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
         message: 'Internal Server Error!'

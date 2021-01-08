@@ -7,7 +7,7 @@ const { createExperience, getDataExperienceById, updateDataExperienceById, delet
 const { createHire, getDataHireById, updateDataHireById, deleteDataHireById, updateStatusHireById, getAllDataHire, getHireByEnId, getHireByProjectId } = require('../controllers/hireController')
 const { createPortofolio, getDataPortofolioById, updateDataportofolioById, deleteDataportofolioById, getAllPortofolio, updatePatchPortofolio, getPortofolioeByEnId } = require('../controllers/portoFolioController')
 const { createProject, getDataProjectById, updateDataProjectById, deleteDataProjectById, getAllProject, updatePatchProject, getProjectByCnId } = require('../controllers/projectController')
-const { createSkill, getDataSkillById, updateDataSkillById, deleteDataSkillById, getAllSkill } = require('../controllers/skillController')
+const { createSkill, getDataSkillById, updateDataSkillById, deleteDataSkillById, getAllSkill, getSkillByEnId } = require('../controllers/skillController')
 const { authorizationEngineer, authorizationCompany } = require('../../middleware/auth')
 const uploadImage = require('../../middleware/multer')
 
@@ -68,6 +68,7 @@ router.patch('/project/:projectId', uploadImage, updatePatchProject)
 router.get('/projectByCompany/:companyId', getProjectByCnId)
 
 router.post('/skill/createSkill', authorizationEngineer, createSkill)
+router.get('/skill/engineer/:engineerId', getSkillByEnId)
 router.get('/skill/:skillId', authorizationEngineer, getDataSkillById)
 router.put('/skill/:skillId', authorizationEngineer, updateDataSkillById)
 router.delete('/skill/:skillId', authorizationEngineer, deleteDataSkillById)
