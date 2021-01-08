@@ -35,7 +35,7 @@ router.put('/engineer/:engineerId', authorizationEngineer, uploadImage, updateEn
 router.get('/filter', authorizationEngineer, getFilterEngineer)
 
 router.get('/experience', authorizationEngineer, getAllExperience)
-router.get('/experience/engineer/:engineerId', authorizationEngineer, getExperienceByEnId)
+router.get('/experience/engineer/:engineerId', getExperienceByEnId)
 router.post('/experience/createExperience', authorizationEngineer, createExperience)
 router.get('/experience/:experienceId', authorizationEngineer, getDataExperienceById)
 router.put('/experience/:experienceId', authorizationEngineer, updateDataExperienceById)
@@ -52,7 +52,7 @@ router.put('/hire/status/:hireId', authorizationEngineer, updateStatusHireById)
 router.delete('/hire/:hireId', authorizationCompany, deleteDataHireById)
 
 router.get('/portofolio', authorizationEngineer, getAllPortofolio)
-router.get('/portofolio/engineer/:engineerId', authorizationEngineer, getPortofolioeByEnId)
+router.get('/portofolio/engineer/:engineerId', getPortofolioeByEnId)
 router.post('/portofolio/createPortofolio', authorizationEngineer, uploadImage, createPortofolio)
 router.get('/portofolio/:portofolioId', authorizationEngineer, getDataPortofolioById)
 router.put('/portofolio/:portofolioId', authorizationEngineer, uploadImage, updateDataportofolioById)
