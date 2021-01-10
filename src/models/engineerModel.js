@@ -1,3 +1,4 @@
+const { getSkillByEnId } = require('../controllers/skillController')
 const db = require('../helpers/db')
 
 const { getAllSkillByIdModel } = require('../models/skillModel')
@@ -56,10 +57,13 @@ module.exports = {
       })
     })
   },
-  searchEngineerModel: (searchKey, searchValue, limit, offset, callback) => {
-    console.log(searchKey)
-    console.log(searchValue)
-    const query = `SELECT en.en_id,
+  searchEngineerModel: (SearchValue, limit, offset, filter) => {
+    return new Promise((resolve, reject) => {
+      let query
+
+      if (parseInt(filter) === 0) {
+        query = `
+        SELECT en.en_id,
         ac.ac_id,
         ac.ac_name,
         ac.ac_email,
@@ -67,35 +71,154 @@ module.exports = {
         en.en_job_tittle,
         en.en_job_type,
         en.en_origin,
+        en.en_foto_profile,
         sk.sk_name_skill
-    FROM engineer en JOIN account ac ON (ac.ac_id = en.ac_id)
-    JOIN skill sk ON (sk.en_id = en.en_id)
-    WHERE ${searchKey} LIKE '%${searchValue}%'
-    GROUP BY ac.ac_name
-    LIMIT ${limit} 
-    OFFSET ${offset}`
-    db.query(query, async (err, results, _fields) => {
-      if (!err) {
-        const allEngineer = []
-        for (let i = 0; i < results.length; i++) {
-          const item = results[i]
-
-          const dataSkill = await getAllSkillByIdModel(item.en_id)
-          allEngineer[i] = {
-            en_id: item.en_id,
-            ac_id: item.ac_id,
-            ac_name: item.ac_name,
-            en_job_title: item.en_job_title,
-            en_job_type: item.en_job_type,
-            en_domicile: item.en_origin,
-            en_profile: item.en_profile,
-            en_skill: dataSkill
-          }
-        }
-        callback(allEngineer)
+        FROM engineer en
+        JOIN account ac
+        ON (ac.ac_id = en.ac_id)
+        LEFT JOIN skill sk
+        ON (sk.en_id = en.en_id)
+        WHERE ac.ac_name
+        LIKE '%${SearchValue}%'
+        OR sk.sk_name_skill
+        LIKE '%${SearchValue}%'
+        GROUP BY ac.ac_id
+        ORDER BY ac.ac_name ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `
+      } else if (parseInt(filter) === 1) {
+        query = `
+        SELECT en.en_id,
+        ac.ac_id,
+        ac.ac_name,
+        ac.ac_email,
+        ac.ac_no_hp,
+        en.en_job_tittle,
+        en.en_job_type,
+        en.en_origin,
+        en.en_foto_profile,
+        sk.sk_name_skill
+        FROM engineer en
+        JOIN account ac
+        ON (ac.ac_id = en.ac_id)
+        LEFT JOIN skill sk
+        ON (sk.en_id = en.en_id)
+        WHERE ac.ac_name
+        LIKE '%${SearchValue}%'
+        OR sk.sk_name_skill
+        LIKE '%${SearchValue}%'
+        GROUP BY ac.ac_id
+        ORDER BY sk.sk_name_skill ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `
+      } else if (parseInt(filter) === 2) {
+        query = `
+        SELECT en.en_id,
+        ac.ac_id,
+        ac.ac_name,
+        ac.ac_email,
+        ac.ac_no_hp,
+        en.en_job_tittle,
+        en.en_job_type,
+        en.en_origin,
+        en.en_foto_profile,
+        sk.sk_name_skill
+        FROM engineer en
+        JOIN account ac
+        ON (ac.ac_id = en.ac_id)
+        LEFT JOIN skill sk
+        ON (sk.en_id = en.en_id)
+        WHERE ac.ac_name
+        LIKE '%${SearchValue}%'
+        OR sk.sk_name_skill
+        LIKE '%${SearchValue}%'
+        GROUP BY ac.ac_id
+        ORDER BY en.en_origin
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `
+      } else if (parseInt(filter) === 3) {
+        query = `
+        SELECT en.en_id,
+        ac.ac_id,
+        ac.ac_name,
+        ac.ac_email,
+        ac.ac_no_hp,
+        en.en_job_tittle,
+        en.en_job_type,
+        en.en_origin,
+        en.en_foto_profile,
+        sk.sk_name_skill
+        FROM engineer en
+        JOIN account ac
+        ON (ac.ac_id = en.ac_id)
+        LEFT JOIN skill sk
+        ON (sk.en_id = en.en_id)
+        WHERE ac.ac_name
+        LIKE '%${SearchValue}%'
+        OR sk.sk_name_skill
+        LIKE '%${SearchValue}%'
+        GROUP BY ac.ac_id
+        ORDER BY en.en_job_type ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `
       } else {
-        callback(err)
+        query = `
+        SELECT en.en_id,
+        ac.ac_id,
+        ac.ac_name,
+        ac.ac_email,
+        ac.ac_no_hp,
+        en.en_job_tittle,
+        en.en_job_type,
+        en.en_origin,
+        en.en_foto_profile,
+        sk.sk_name_skill
+        FROM engineer en
+        JOIN account ac
+        ON (ac.ac_id = en.ac_id)
+        LEFT JOIN skill sk
+        ON (sk.en_id = en.en_id)
+        WHERE ac.ac_name
+        LIKE '%${SearchValue}%'
+        OR sk.sk_name_skill
+        LIKE '%${SearchValue}%'
+        GROUP BY ac.ac_id
+        ORDER BY en.en_id ASC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `
       }
+      db.query(query, async (err, result, fields) => {
+        if (!err) {
+          const data = []
+
+          for (let i = 0; i < result.length; i++) {
+            const item = result[i]
+
+            const skill = await getAllSkillByIdModel(item.en_id)
+            data[i] = {
+              en_id: item.en_id,
+              ac_id: item.ac_id,
+              ac_name: item.ac_name,
+              ac_email: item.ac_email,
+              ac_no_hp: item.ac_no_hp,
+              en_job_tittle: item.en_job_tittle,
+              en_job_type: item.en_job_type,
+              en_origin: item.en_origin,
+              en_foto_profile: item.en_foto_profile,
+              en_skill: skill
+            }
+          }
+
+          resolve(data)
+        } else {
+          reject(new Error(err))
+        }
+      })
     })
   },
   getFilterEngineer: (data) => {
@@ -222,7 +345,7 @@ module.exports = {
               en_id: item.en_id,
               ac_id: item.ac_id,
               ac_name: item.ac_name,
-              en_job_title: item.en_job_title,
+              en_job_tittle: item.en_job_tittle,
               en_job_type: item.en_job_type,
               en_domicile: item.en_origin,
               en_profile: item.en_profile,

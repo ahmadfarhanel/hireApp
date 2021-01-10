@@ -119,46 +119,49 @@ module.exports = {
     }
   },
   searchEngineer: async (req, res) => {
-    let { search, limit, page } = req.query
-    let searchValue = ''
-    let searchKey = ''
+    try {
+      let { search, limit, page, filter } = req.query
+      let searchValue = ''
+      if (typeof search === 'object') {
+        searchValue = Object.values(search)[0]
+      } else {
+        searchValue = search || ''
+      }
+      // const searchValue = Object.values(search)[0]
+      if (!limit) {
+        limit = 10
+      } else {
+        limit = parseInt(limit)
+      }
+      if (!page) {
+        page = 1
+      } else {
+        page = parseInt(page)
+      }
+      const offset = (page - 1) * limit
 
-    if (typeof search === 'object') {
-      searchKey = Object.keys(search)[0]
-      searchValue = Object.values(search)[0]
-    } else {
-      searchKey = 'ac.acname'
-      searchValue = search || ''
-    }
+      const result = await searchEngineerModel(searchValue, limit, offset, filter)
+      console.log(result)
 
-    if (!limit) {
-      limit = 50
-    } else {
-      limit = parseInt(limit)
-    }
-
-    if (!page) {
-      page = 1
-    } else {
-      page = parseInt(page)
-    }
-
-    const offset = (page - 1) * limit
-
-    searchEngineerModel(searchKey, searchValue, limit, offset, result => {
       if (result.length) {
         res.status(200).send({
           success: true,
-          message: 'Engineer List',
+          message: 'list engineer',
           data: result
         })
       } else {
         res.status(404).send({
           success: false,
-          message: 'Item Engineer not found!'
+          message: 'engineer not found'
         })
       }
-    })
+    } catch (error) {
+      console.log(error)
+      res.status(500).send({
+        success: false,
+        message: 'internal server error!'
+      })
+    }
   },
 
   getFilterEngineer: async (req, res, _next) => {
