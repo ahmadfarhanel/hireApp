@@ -213,24 +213,24 @@ module.exports = {
           const result = await updatePatchAccountModel(accountId, dataColumn)
           if (result.affectedRows) {
             res.status(200).send({
-              succes: true,
+              success: true,
               message: 'Data Berhasil Di Update'
             })
           } else {
             res.status(400).send({
-              succes: true,
+              success: true,
               message: 'Failed To update Data '
             })
           }
         } else {
           res.status(404).send({
-            succes: true,
+            success: true,
             message: `Proejct with id ${accountId} not Found `
           })
         }
       } else {
         res.status(400).send({
-          succes: true,
+          success: true,
           message: 'Some Field must be filled'
         })
       }
