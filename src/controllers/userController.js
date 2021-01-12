@@ -15,9 +15,10 @@ module.exports = {
           console.log(dataUser)
           let payload = {
             ac_id: dataUser[0].ac_id,
+            ac_name: dataUser[0].ac_name,
             ac_email: dataUser[0].ac_email,
             ac_level: dataUser[0].ac_level,
-            ac_name: dataUser[0].ac_name
+            ac_no_hp: dataUser[0].ac_no_hp
           }
           const token = jwt.sign(payload, process.env.JWT_key, { expiresIn: '1h' })
           payload = { ...payload, token }

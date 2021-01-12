@@ -1,4 +1,4 @@
-const { getSkillByEnId } = require('../controllers/skillController')
+
 const db = require('../helpers/db')
 
 const { getAllSkillByIdModel } = require('../models/skillModel')
