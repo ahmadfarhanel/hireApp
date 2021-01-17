@@ -109,6 +109,19 @@ module.exports = {
         }
       })
     })
+  },
+  updatePasswordModel: (accountId, acPassword) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE account SET ac_password = '${acPassword}' WHERE 
+      ac_id = '${accountId}'`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+          console.log(err)
+        }
+      })
+    })
   }
 
 }

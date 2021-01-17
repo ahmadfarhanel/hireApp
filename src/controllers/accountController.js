@@ -1,4 +1,4 @@
-const { registerAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel, updatePatchAccountModel, getDataAccountModel } = require('../models/accountModel')
+const { registerAccountModel, getAllDataAccountModel, getAccountByIdModel, deleteAccountModel, updateAccountModel, updatePasswordModel, updatePatchAccountModel, getDataAccountModel } = require('../models/accountModel')
 const bcrypt = require('bcrypt')
 const { getUserModel } = require('../models/userModel')
 
@@ -262,6 +262,44 @@ module.exports = {
       res.status(500).send({
         success: false,
         message: 'Internal Server Error!'
+      })
+      console.log(error)
+    }
+  },
+  updatePassword: async (req, res) => {
+    try {
+      const { accountId } = req.params
+      const { acPassword } = req.body
+      const salt = bcrypt.genSaltSync(10)
+      const encryptPassword = bcrypt.hashSync(acPassword, salt)
+      const findData = await getAccountByIdModel(accountId)
+      const data = {
+        acPassword: encryptPassword
+      }
+      if (findData.length) {
+        const result = await updatePasswordModel(accountId, data.acPassword)
+
+        if (result.affectedRows) {
+          res.status(200).send({
+            success: true,
+            message: 'Data Berhasil Di Update'
+          })
+        } else {
+          res.status(404).send({
+            success: false,
+            message: 'Item engineer not found!'
+          })
+        }
+      } else {
+        res.send({
+          success: false,
+          message: 'All Field must be filled!'
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server errors!'
       })
       console.log(error)
     }

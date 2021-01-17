@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const { registerAccount, getAllData, getAccountById, deleteAccount, updateAccount, updatePatchAccount, getAllAccount } = require('../controllers/accountController')
+const { registerAccount, getAllData, getAccountById, deleteAccount, updateAccount, updatePatchAccount, getAllAccount, updatePassword } = require('../controllers/accountController')
 const { getAllCompany, getDataCompanyById, updateCompany, updatePatchCompany, getDataCompanyByAccountId } = require('../controllers/companyController')
 const { getAllEngineer, getDataEngineerById, updateEngineer, searchEngineer, getFilterEngineer, getDataEngineerByAccountId } = require('../controllers/engineerController')
 const { createExperience, getDataExperienceById, updateDataExperienceById, deleteDataExperienceById, getAllExperience, updatePatchExperience, getExperienceByEnId } = require('../controllers/experienceController')
@@ -19,6 +19,7 @@ router.get('/acc', getAllAccount)
 router.get('/account/:accountId', getAccountById)
 router.delete('/account/:accountId', deleteAccount)
 router.put('/account/:accountId', updateAccount)
+router.put('/account/password/:accountId', updatePassword)
 router.patch('/account/:accountId', updatePatchAccount)
 
 router.get('/company/:companyId', authorizationCompany, getDataCompanyById)
