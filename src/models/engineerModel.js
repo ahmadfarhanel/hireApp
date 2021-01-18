@@ -371,5 +371,16 @@ module.exports = {
         }
       })
     })
+  },
+  updatePatchEngineerModel: (engineerId, dataColumn) => {
+    return new Promise((resolve, reject) => {
+      db.query(`UPDATE engineer SET ${dataColumn} WHERE en_id = ${engineerId}`, (err, result, _fields) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(new Error(err))
+        }
+      })
+    })
   }
 }

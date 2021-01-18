@@ -1,4 +1,4 @@
-const { createHireEngineerModel, getAllDataEngineerModel, getDataEngineerByIdModel, updateEngineerModel, searchEngineerModel, getFilterEngineer, getDataEngineerByAccountIdModel } = require('../models/engineerModel')
+const { createHireEngineerModel, getAllDataEngineerModel, getDataEngineerByIdModel, updateEngineerModel, updatePatchEngineerModel, searchEngineerModel, getFilterEngineer, getDataEngineerByAccountIdModel } = require('../models/engineerModel')
 
 module.exports = {
   createHireEngineer: async (req, res) => {
@@ -232,6 +232,48 @@ module.exports = {
         success: false,
         message: 'Internal server error!'
       })
+    }
+  },
+  updatePatchEngineer: async (req, res) => {
+    try {
+      const { engineerId } = req.params
+      const result = await getDataEngineerByIdModel(engineerId)
+      const image = req.file === undefined ? result[0].en_foto_profile : req.file.filename
+      if (result.length) {
+        const data = {
+          ...req.body,
+          en_foto_profile: image
+        }
+        console.log(data)
+        const dataColumn = Object.entries(data).map(item => {
+          // untuk melihat value akhir apakah int atau string, jika int maka tanpa kutip, jika string maka kutip
+          const queryDynamic = parseInt(item[1]) > 0 ? `${item[0]} = ${item[1]}` : `${item[0]} = '${item[1]}'`
+          return queryDynamic
+        })
+        const result = await updatePatchEngineerModel(engineerId, dataColumn)
+        if (result.affectedRows) {
+          res.status(200).send({
+            succes: true,
+            message: 'Data Berhasil Di Update'
+          })
+        } else {
+          res.status(400).send({
+            succes: true,
+            message: 'Failed To update Data '
+          })
+        }
+      } else {
+        res.status(404).send({
+          succes: true,
+          message: `Engineer with id ${engineerId} not Found `
+        })
+      }
+    } catch (error) {
+      res.status(500).send({
+        success: false,
+        message: 'Internal server error!'
+      })
+      console.log(error)
     }
   }
 }
