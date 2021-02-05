@@ -51,10 +51,10 @@ module.exports = {
               en_id: item.en_id,
               ac_id: item.ac_id,
               ac_name: item.ac_name,
-              en_job_title: item.en_job_title,
+              en_job_tittle: item.en_job_tittle,
               en_job_type: item.en_job_type,
-              en_domicile: item.en_domicile,
-              en_profile: item.en_profile,
+              en_origin: item.en_origin,
+              en_foto_profile: item.en_foto_profile,
               en_skill: skill
             }
           }
