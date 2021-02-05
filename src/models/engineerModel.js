@@ -21,10 +21,44 @@ module.exports = {
   },
   getAllDataEngineerModel: () => {
     return new Promise((resolve, reject) => {
-      const querySelect = 'SELECT * FROM engineer en JOIN account ac ON ac.ac_id = en.ac_id'
-      db.query(querySelect, (error, results, _fields) => {
+      const query = `
+        SELECT en.en_id,
+               ac.ac_id,
+               ac.ac_name,
+               en.en_job_tittle,
+               en.en_job_type,
+               en.en_origin,
+               en.en_foto_profile
+          FROM engineer en
+          JOIN account ac
+            ON ac.ac_id = en.ac_id
+         WHERE en.en_job_tittle != ''
+           AND en.en_job_type != ''
+           AND en.en_origin != ''
+      ORDER BY ac.ac_id DESC
+      `
+
+      db.query(query, async (error, results, _fields) => {
         if (!error) {
-          resolve(results)
+          const data = []
+
+          for (let i = 0; i < results.length; i++) {
+            const item = results[i]
+
+            const skill = await getAllSkillByIdModel(item.en_id)
+
+            data[i] = {
+              en_id: item.en_id,
+              ac_id: item.ac_id,
+              ac_name: item.ac_name,
+              en_job_title: item.en_job_title,
+              en_job_type: item.en_job_type,
+              en_domicile: item.en_domicile,
+              en_profile: item.en_profile,
+              en_skill: skill
+            }
+          }
+          resolve(data)
         } else {
           reject(error)
         }

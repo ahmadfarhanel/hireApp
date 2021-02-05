@@ -41,6 +41,7 @@ module.exports = {
         })
       }
     } catch (error) {
+      console.log(error)
       res.status(500).send({
         success: false,
         message: 'Internal Server Error!'
