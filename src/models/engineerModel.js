@@ -29,7 +29,8 @@ module.exports = {
                en.en_job_type,
                en.en_origin,
                en.en_foto_profile,
-               en.en_desc
+               en.en_desc,
+               ac.ac_email
           FROM engineer en
           JOIN account ac
             ON ac.ac_id = en.ac_id
@@ -56,6 +57,7 @@ module.exports = {
               en_job_type: item.en_job_type,
               en_origin: item.en_origin,
               en_desc: item.en_desc,
+              ac_email: item.ac_email,
               en_foto_profile: item.en_foto_profile,
               en_skill: skill,
             }
